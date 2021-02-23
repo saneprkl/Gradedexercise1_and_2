@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body { margin: 0 };
+        </style>
+    </head>
+    <body>
+        <canvas id="target"></canvas>
+        <script>
+            const canvas = document.getElementById("target");
+            const context = canvas.getContext("2d");
+            canvas.width = 672;
+            canvas.height = 744;
+
+            class GameObject {
+                constructor(startX, startY, width, height, speedX, speedY) {
+                    this.x = startX;
+                    this.y = startY;
+                    this.width = width;
+                    this.height = height;
+                    this.speedX = speedX;
+                    this.speedY = speedY;
+                }
+
+                update() {
+                    if((this.y >= canvas.height) || (this.y <= 0)) {
+                        this.speedY = -this.speedY;
+                    }
+                    if(this.x >= canvas.width || (this.x <= 0 )) {
+                        this.speedX =-this.speedX;
+                    }
+                    this.y = this.y + this.speedY;
+                    this.x = this.x + this.SpeedX;
+                }
+
+                draw() {
+                    console.log('draw not implemented.');
+                }
+            }
+
+            class Frog extends GameObject {
+                
+                moveUp() {
+                    this.y = this.y - this.speedY;
+                    this.framCounter = 0;
+                }
+                moveDown() {
+                    this.y = this.y + this.speedY;
+                }
+                moveLeft() {
+                    this.x = this.x - this.speedX;
+                }
+                moveRight() {
+                    this.x = this.x + this.speedX;
+                }
+                update(){}
+                draw() {
+                    context.drawImage(froggerSheet, 3, 3, 48, 48, this.x, this.y, this.width, this.height);
+                }
+            }
+
+            class Car extends GameObject {
+                update(){}
+                draw() {
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height);
+                    context.fillStyle = 'red';
+                    context.fill();
+                    context.lineWidth = 1;
+                    context.strokeStyle = 'red';
+                    context.stroke();
+                }
+            }
+
+            const frog = new Frog(288, 300, 48, 48, 50, 50);
+            const car = new Car(100, 100, 200, 50, 0, 0);
+            const objectStorage = [];
+            objectStorage.push(frog);
+            objectStorage.push(car);
+
+            function refreshScreen() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                for(let i = 0; i < objectStorage.length; i++) {
+                    objectStorage[i].update();
+                    objectStorage[i].draw();
+                }
+                window.requestAnimationFrame(refreshScreen);
+            }
+
+            const froggerSheet = new Image();
+            froggerSheet.onload = () => {
+                window.requestAnimationFrame(refreshScreen);
+            }
+            froggerSheet.src = 'froggerSheet.png';
+
+            window.addEventListener('keydown', function(event){
+                switch(event.keyCode) {
+                    case 37:
+                        frog.moveLeft();
+                        break;
+                    case 38:
+                        frog.moveUp();
+                        break;
+                    case 39:
+                        frog.moveRight();
+                        break;
+                    case 40:
+                        frog.moveDown();
+                        break;
+                }
+            });
+          
+        </script>
+    </body>
+</html>
