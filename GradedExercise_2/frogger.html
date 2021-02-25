@@ -91,10 +91,21 @@
                     this.x, this.y, this.width, this.height);
                 }
             }
-            class Log extends GameObject {
-                
+            class BigLog extends GameObject {
                 draw() {
                     context.drawImage(froggerSheet, 1484, 917, 132, 36,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class SmallLog extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 1568, 868, 74, 32,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class HugeLog extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 1732, 1104, 170, 32,
                     this.x, this.y, this.width, this.height);
                 }
             }
@@ -118,17 +129,41 @@
                 context.fill();
                 }
             }
+            class Turtle extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 1287, 441, 43, 31,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Safe_area extends GameObject {
+                draw() {
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height);
+                    context.fillStyle = 'Yellow';
+                    context.fill();
+                }
+            }
+            class Green_bottom extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 1285, 622, 26, 24,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+
             
            
 
-            const water = new Water(0, 75, canvas.width, 286, 0, 0);
+            const water = new Water(0, 55, canvas.width, 306, 0, 0);
             const frog = new Frog(336, 655, 38, 38, 47, 48);
             const car_1 = new Car_1(596, 604, 48, 40, 1.5, 0);
             const car_2 = new Car_2(20, 556, 38, 40, 1, 0);
             const car_3 = new Car_3(602, 512, 49, 34, 1, 0);
             const car_4 = new Car_4(1, 460, 50, 44, 1.5, 0);
             const car_5 = new Car_5(600, 414, 85, 34, 1, 0);
-            const bigLog = new Log(50, 50, 132, 44, 2, 0);
+            const bigLog = new BigLog(1, 125, 140, 44, 2, 0); 
+            const smallLog = new SmallLog(10, 272, 90, 38, 1.5, 0);
+            const hugeLog = new HugeLog(1, 222, 185, 38, 2, 0);
+            const goal = new Safe_area(20, 60, 50, 50, 0, 0);
             
 
             const objectStorage = [];
@@ -144,13 +179,45 @@
                 counter_mid_black = counter_mid_black + 46;
                 counter_mid_blue = counter_mid_blue + 46;
             }
+
             objectStorage.push(water);
+
+            let counter_bottom_greenery = 0;
+            
+            for(let i = 0; i < 5; i++) {
+                if(i > 0 ){
+                    counter_bottom_greenery = counter_bottom_greenery + 140;
+                    objectStorage.push(new Green_bottom(0 + counter_bottom_greenery, 91, 26, 24, 0, 0));
+                    objectStorage.push(new Green_bottom(0 + counter_bottom_greenery + 26, 91, 26, 24, 0, 0));
+                
+                }
+                else{
+                objectStorage.push(new Green_bottom(0 + counter_bottom_greenery, 91, 26, 24, 0, 0));
+                counter_bottom_greenery = counter_bottom_greenery + 26;
+            }
+            }
+
+
+            let triple_turtle = 0;
+            for(let i = 0; i < 3; i++) {
+                objectStorage.push(new Turtle(620 - triple_turtle, 321, 46, 34, -1.35, 0));
+                triple_turtle = triple_turtle + 47;
+            }
+            let dual_turtle = 0;
+            for(let i = 0; i < 2; i++) {
+                objectStorage.push(new Turtle(620 - dual_turtle, 176, 46, 34, -1.35, 0));
+                dual_turtle = dual_turtle + 47;
+            }
+            
             objectStorage.push(car_1);
             objectStorage.push(car_2);
             objectStorage.push(car_3);
             objectStorage.push(car_4);
             objectStorage.push(car_5);
             objectStorage.push(bigLog);
+            objectStorage.push(smallLog);
+            objectStorage.push(hugeLog);
+            objectStorage.push(goal);
             objectStorage.push(frog);
 
 
