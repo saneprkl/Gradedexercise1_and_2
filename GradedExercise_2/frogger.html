@@ -2,11 +2,12 @@
 <html>
     <head>
         <style>
-            body { margin: 0 };
+            body { margin: 0;  };
+           
         </style>
     </head>
     <body>
-        <canvas id="target"></canvas>
+        <div style="text-align: center;"><canvas id="target" style="background-color: black;"></canvas></div>
         <script>
             const canvas = document.getElementById("target");
             const context = canvas.getContext("2d");
@@ -22,7 +23,6 @@
                     this.speedX = speedX;
                     this.speedY = speedY;
                 }
-
                 update() {
                     if((this.y >= canvas.height) || (this.y <= 0)) {
                         this.speedY = -this.speedY;
@@ -31,8 +31,9 @@
                         this.speedX =-this.speedX;
                     }
                     this.y = this.y + this.speedY;
-                    this.x = this.x + this.SpeedX;
+                    this.x = this.x + this.speedX;
                 }
+                
 
                 draw() {
                     console.log('draw not implemented.');
@@ -56,29 +57,105 @@
                 }
                 update(){}
                 draw() {
-                    context.drawImage(froggerSheet, 3, 3, 48, 48, this.x, this.y, this.width, this.height);
+                    context.drawImage(froggerSheet, 42, 51, 40, 43,
+                    this.x, this.y, this.width, this.height);
                 }
             }
-
-            class Car extends GameObject {
-                update(){}
+            class Car_1 extends GameObject {
                 draw() {
-                    context.beginPath();
-                    context.rect(this.x, this.y, this.width, this.height);
-                    context.fillStyle = 'red';
-                    context.fill();
-                    context.lineWidth = 1;
-                    context.strokeStyle = 'red';
-                    context.stroke();
+                    context.drawImage(froggerSheet, 37, 1009, 52, 46,
+                    this.x, this.y, this.width, this.height);
                 }
             }
+            class Car_2 extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 111, 1011, 46, 40,
+                    this.x, this.y, this.width, this.height);
+                }  
+            }
+            class Car_3 extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 303, 1014, 49, 34,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Car_4 extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 372, 1008, 52, 46,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Car_5 extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 189, 1014, 85, 34,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Log extends GameObject {
+                
+                draw() {
+                    context.drawImage(froggerSheet, 1484, 917, 132, 36,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class PurpleThing extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 38, 429, 46, 52,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class PurpleThing_Blue extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 1189, 429, 46, 30,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Water extends GameObject {
+                draw() {
+                context.beginPath();
+                context.rect(this.x, this.y, this.width, this.height);
+                context.fillStyle = '#1313ef';
+                context.fill();
+                }
+            }
+            
+           
 
-            const frog = new Frog(288, 300, 48, 48, 50, 50);
-            const car = new Car(100, 100, 200, 50, 0, 0);
+            const water = new Water(0, 75, canvas.width, 286, 0, 0);
+            const frog = new Frog(336, 655, 38, 38, 47, 48);
+            const car_1 = new Car_1(596, 604, 48, 40, 1.5, 0);
+            const car_2 = new Car_2(20, 556, 38, 40, 1, 0);
+            const car_3 = new Car_3(602, 512, 49, 34, 1, 0);
+            const car_4 = new Car_4(1, 460, 50, 44, 1.5, 0);
+            const car_5 = new Car_5(600, 414, 85, 34, 1, 0);
+            const bigLog = new Log(50, 50, 132, 44, 2, 0);
+            
+
             const objectStorage = [];
-            objectStorage.push(frog);
-            objectStorage.push(car);
 
+            let counter_bottom = 0;
+            let counter_mid_black = 0;
+            let counter_mid_blue = 0;
+            for(let i = 0; i < 15; i++) {
+                objectStorage.push(new PurpleThing(626 - counter_bottom, 648, 46, 50, 0, 0));
+                objectStorage.push(new PurpleThing(626 - counter_mid_black, 361, 46, 50, 0, 0));
+                objectStorage.push(new PurpleThing_Blue(626 - counter_mid_blue, 361, 46, 30, 0, 0));
+                counter_bottom = counter_bottom + 46;
+                counter_mid_black = counter_mid_black + 46;
+                counter_mid_blue = counter_mid_blue + 46;
+            }
+            objectStorage.push(water);
+            objectStorage.push(car_1);
+            objectStorage.push(car_2);
+            objectStorage.push(car_3);
+            objectStorage.push(car_4);
+            objectStorage.push(car_5);
+            objectStorage.push(bigLog);
+            objectStorage.push(frog);
+
+
+            
+            
             function refreshScreen() {
                 context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -86,14 +163,16 @@
                     objectStorage[i].update();
                     objectStorage[i].draw();
                 }
+                
                 window.requestAnimationFrame(refreshScreen);
             }
-
+            
             const froggerSheet = new Image();
             froggerSheet.onload = () => {
                 window.requestAnimationFrame(refreshScreen);
             }
             froggerSheet.src = 'froggerSheet.png';
+            
 
             window.addEventListener('keydown', function(event){
                 switch(event.keyCode) {
@@ -111,7 +190,7 @@
                         break;
                 }
             });
-          
+            
         </script>
     </body>
 </html>
