@@ -21,17 +21,27 @@
                     this.width = width;
                     this.height = height;
                     this.speedX = speedX;
-                    this.speedY = speedY;
+                    this.speedY = speedY;  
+                    this.collision = false;
+                    this.hitching = false;
                 }
+
                 update() {
-                    if((this.y >= canvas.height) || (this.y <= 0)) {
-                        this.speedY = -this.speedY;
-                    }
-                    if(this.x >= canvas.width || (this.x <= 0 )) {
-                        this.speedX =-this.speedX;
-                    }
+      
                     this.y = this.y + this.speedY;
                     this.x = this.x + this.speedX;
+                    if(this != frog) {
+                        if(((this.x + this.width) > frog.x)
+                            && (this.x < (frog.x + frog.width))
+                            && ((this.y + this.height) > frog.y)
+                            && (this.y < (frog.y + frog.height))) {
+                                console.log('collision', this.collision);
+                                this.collision = true;
+                            }
+                        else {
+                            this.collision = false;
+                        }
+                    }
                 }
                 
 
@@ -39,23 +49,45 @@
                     console.log('draw not implemented.');
                 }
             }
+            
 
-            class Frog extends GameObject {
-                
-                moveUp() {
-                    this.y = this.y - this.speedY;
-                    this.framCounter = 0;
-                }
-                moveDown() {
-                    this.y = this.y + this.speedY;
-                }
-                moveLeft() {
-                    this.x = this.x - this.speedX;
-                }
-                moveRight() {
-                    this.x = this.x + this.speedX;
+            class Scenery {
+                constructor(startX, startY, width, height, speedX, speedY) {
+                    this.x = startX;
+                    this.y = startY;
+                    this.width = width;
+                    this.height = height;
+                    this.speedX = speedX;
+                    this.speedY = speedY;
                 }
                 update(){}
+                draw() {
+                    console.log('draw not implemented.');
+                }
+            }
+
+            class Frog extends GameObject {
+                moveUp() {
+                    if(this.y > 100) {
+                    this.y = this.y - 48;
+
+                    }
+                }
+                moveDown() {
+                    if(this.y < canvas.height - 100) {
+                    this.y = this.y + 48;
+                    }
+                }
+                moveLeft() {
+                    if(this.x > 15) {
+                    this.x = this.x - 47;
+                    }
+                }
+                moveRight() {
+                    if(this.x < 600) {
+                    this.x = this.x + 47;
+                    }
+                }
                 draw() {
                     context.drawImage(froggerSheet, 42, 51, 40, 43,
                     this.x, this.y, this.width, this.height);
@@ -65,63 +97,115 @@
                 draw() {
                     context.drawImage(froggerSheet, 37, 1009, 52, 46,
                     this.x, this.y, this.width, this.height);
+                    if(this.x <-165){ 
+                        this.x = canvas.width + this.width;
+                    }
                 }
             }
             class Car_2 extends GameObject {
                 draw() {
                     context.drawImage(froggerSheet, 111, 1011, 46, 40,
                     this.x, this.y, this.width, this.height);
+                    if(this.x > canvas.width + 130) {
+                        this.x = 0 - this.width ;
+                    }
                 }  
             }
             class Car_3 extends GameObject {
                 draw() {
                     context.drawImage(froggerSheet, 303, 1014, 49, 34,
                     this.x, this.y, this.width, this.height);
+                    if(this.x <-165){ 
+                        this.x = canvas.width + this.width;
+                    }
                 }
             }
             class Car_4 extends GameObject {
                 draw() {
                     context.drawImage(froggerSheet, 372, 1008, 52, 46,
                     this.x, this.y, this.width, this.height);
+                    if(this.x > canvas.width + 130) {
+                        this.x = 0 - this.width ;
+                    }
                 }
             }
             class Car_5 extends GameObject {
                 draw() {
                     context.drawImage(froggerSheet, 189, 1014, 85, 34,
                     this.x, this.y, this.width, this.height);
+                    if(this.x <-165){ 
+                        this.x = canvas.width + this.width;
+                    }
                 }
             }
             class BigLog extends GameObject {
                 draw() {
                     context.drawImage(froggerSheet, 1484, 917, 132, 36,
                     this.x, this.y, this.width, this.height);
+                    if(this.collision == true) {
+                        if((this.x + this.width) > (frog.x + frog.width-15)&& 
+                            (this.x + this.width - 10) < (frog.x + this.width)) {
+                            this.hitching = true;
+                            frog.speedX = this.speedX;
+                        }
+                    }
+                    if(this.collision == false && this.hitching == true) {
+                            frog.speedX = 0;
+                            this.hitching = false;
+                    }   
                 }
             }
             class SmallLog extends GameObject {
                 draw() {
                     context.drawImage(froggerSheet, 1568, 868, 74, 32,
                     this.x, this.y, this.width, this.height);
+
+                    if(this.collision == true) {
+                        if((this.x + this.width) > (frog.x + frog.width-15)&& 
+                            (this.x + this.width - 10) < (frog.x + this.width)) {
+                            this.hitching = true;
+                            frog.speedX = this.speedX;
+                        }
+                    }
+                    if(this.collision == false && this.hitching == true) {
+                            frog.speedX = 0;
+                            this.hitching = false;
+                    }
                 }
+                    
             }
+            
             class HugeLog extends GameObject {
                 draw() {
                     context.drawImage(froggerSheet, 1732, 1104, 170, 32,
                     this.x, this.y, this.width, this.height);
+
+                    if(this.collision == true) {
+                        if((this.x + this.width) > (frog.x + frog.width-15)&& 
+                            (this.x + this.width - 10) < (frog.x + this.width)) {
+                            this.hitching = true;
+                            frog.speedX = this.speedX;
+                        }
+                    }
+                    if(this.collision == false && this.hitching == true) {
+                            frog.speedX = 0;
+                            this.hitching = false;
+                    }
                 }
             }
-            class PurpleThing extends GameObject {
+            class PurpleThing extends Scenery {
                 draw() {
                     context.drawImage(froggerSheet, 38, 429, 46, 52,
                     this.x, this.y, this.width, this.height);
                 }
             }
-            class PurpleThing_Blue extends GameObject {
+            class PurpleThing_Blue extends Scenery {
                 draw() {
                     context.drawImage(froggerSheet, 1189, 429, 46, 30,
                     this.x, this.y, this.width, this.height);
                 }
             }
-            class Water extends GameObject {
+            class Water extends Scenery {
                 draw() {
                 context.beginPath();
                 context.rect(this.x, this.y, this.width, this.height);
@@ -133,9 +217,20 @@
                 draw() {
                     context.drawImage(froggerSheet, 1287, 441, 43, 31,
                     this.x, this.y, this.width, this.height);
+                    if(this.collision == true) {
+                        if((this.x + this.width) > (frog.x + frog.width-11) && 
+                            (this.x + this.width) < (frog.x + frog.width + 19)){
+                            this.hitching = true;
+                            frog.speedX = this.speedX;
+                        }
+                    }
+                    if(this.collision == false && this.hitching == true) {
+                            frog.speedX = 0;
+                            this.hitching = false;
+                    }
                 }
             }
-            class Safe_area extends GameObject {
+            class Goal extends GameObject {
                 draw() {
                     context.beginPath();
                     context.rect(this.x, this.y, this.width, this.height);
@@ -154,16 +249,30 @@
            
 
             const water = new Water(0, 55, canvas.width, 306, 0, 0);
-            const frog = new Frog(336, 655, 38, 38, 47, 48);
-            const car_1 = new Car_1(596, 604, 48, 40, 1.5, 0);
-            const car_2 = new Car_2(20, 556, 38, 40, 1, 0);
-            const car_3 = new Car_3(602, 512, 49, 34, 1, 0);
-            const car_4 = new Car_4(1, 460, 50, 44, 1.5, 0);
-            const car_5 = new Car_5(600, 414, 85, 34, 1, 0);
+            const frog = new Frog(336, 655, 38, 38, 0, 0);
+            const car_1 = new Car_1(650, 604, 48, 40, -0.75, 0);
+            const car_1_2 = new Car_1(1000, 604, 48, 40, -0.75, 0);
+            const car_1_3 = new Car_1(1700, 604, 48, 40, -0.75, 0);
+            const car_2 = new Car_2(1, 556, 38, 40, 1, 0);
+            const car_2_2 = new Car_2(-265, 556, 38, 40, 1, 0);
+            const car_2_3 = new Car_2(-500, 556, 38, 40, 1, 0);
+            const car_3 = new Car_3(690, 512, 49, 34, -1.2, 0);
+            const car_3_2 = new Car_3(960, 512, 49, 34, -1.2, 0);
+            const car_3_3 = new Car_3(1295, 512, 49, 34, -1.2, 0);
+            const car_4 = new Car_4(250, 460, 50, 44, 1, 0);
+            const car_4_2 = new Car_4(-100, 460, 50, 44, 1, 0);
+            const car_4_3 = new Car_4(-400, 460, 50, 44, 1, 0);
+            const car_5 = new Car_5(550, 414, 85, 34, -1.2, 0);
+            const car_5_2 = new Car_5(926, 414, 85, 34, -1.2, 0);
+            const car_5_3 = new Car_5(1188, 414, 85, 34, -1.2, 0);
             const bigLog = new BigLog(1, 125, 140, 44, 2, 0); 
             const smallLog = new SmallLog(10, 272, 90, 38, 1.5, 0);
             const hugeLog = new HugeLog(1, 222, 185, 38, 2, 0);
-            const goal = new Safe_area(20, 60, 50, 50, 0, 0);
+            const goal_1 = new Goal(30, 60, 50, 50, 0, 0);
+            const goal_2 = new Goal(164, 60, 50, 50, 0, 0);
+            const goal_3 = new Goal(302, 60, 50, 50, 0, 0);
+            const goal_4 = new Goal(440, 60, 50, 50, 0, 0);
+            const goal_5 = new Goal(canvas.width - 90, 60, 50, 50, 0, 0);
             
 
             const objectStorage = [];
@@ -181,19 +290,23 @@
             }
 
             objectStorage.push(water);
-
+            objectStorage.push(goal_1);
+            objectStorage.push(goal_2);
+            objectStorage.push(goal_3);
+            objectStorage.push(goal_4);
+            objectStorage.push(goal_5);
             let counter_bottom_greenery = 0;
             
-            for(let i = 0; i < 5; i++) {
+            for(let i = 0; i < 6; i++) {
                 if(i > 0 ){
-                    counter_bottom_greenery = counter_bottom_greenery + 140;
+                    
                     objectStorage.push(new Green_bottom(0 + counter_bottom_greenery, 91, 26, 24, 0, 0));
                     objectStorage.push(new Green_bottom(0 + counter_bottom_greenery + 26, 91, 26, 24, 0, 0));
-                
+                    counter_bottom_greenery = counter_bottom_greenery + 138;
                 }
                 else{
                 objectStorage.push(new Green_bottom(0 + counter_bottom_greenery, 91, 26, 24, 0, 0));
-                counter_bottom_greenery = counter_bottom_greenery + 26;
+                counter_bottom_greenery = counter_bottom_greenery + 96;
             }
             }
 
@@ -210,14 +323,24 @@
             }
             
             objectStorage.push(car_1);
+            objectStorage.push(car_1_2);
+            objectStorage.push(car_1_3);
             objectStorage.push(car_2);
+            objectStorage.push(car_2_2);
+            objectStorage.push(car_2_3);
             objectStorage.push(car_3);
+            objectStorage.push(car_3_2);
+            objectStorage.push(car_3_3);
             objectStorage.push(car_4);
+            objectStorage.push(car_4_2);
+            objectStorage.push(car_4_3);
             objectStorage.push(car_5);
+            objectStorage.push(car_5_2);
+            objectStorage.push(car_5_3);
             objectStorage.push(bigLog);
             objectStorage.push(smallLog);
             objectStorage.push(hugeLog);
-            objectStorage.push(goal);
+            
             objectStorage.push(frog);
 
 
