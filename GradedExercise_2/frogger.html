@@ -24,12 +24,12 @@
                     this.speedY = speedY;  
                     this.collision = false;
                     this.hitching = false;
+                    this.lifeCount = 3;
                 }
 
-                update() {
-      
-                    this.y = this.y + this.speedY;
-                    this.x = this.x + this.speedX;
+                update(deltaTime) {
+                    this.y = this.y + this.speedY * deltaTime / 1000;
+                    this.x = this.x + this.speedX * deltaTime / 1000;
                     if(this != frog) {
                         if(((this.x + this.width) > frog.x)
                             && (this.x < (frog.x + frog.width))
@@ -37,20 +37,19 @@
                             && (this.y < (frog.y + frog.height))) {
                                 console.log('collision', this.collision);
                                 this.collision = true;
+                                
                             }
-                        else {
+                            else {
                             this.collision = false;
                         }
                     }
+                    
                 }
-                
-
                 draw() {
                     console.log('draw not implemented.');
                 }
             }
             
-
             class Scenery {
                 constructor(startX, startY, width, height, speedX, speedY) {
                     this.x = startX;
@@ -65,33 +64,101 @@
                     console.log('draw not implemented.');
                 }
             }
-
+            //#1313ef
+            class Water extends GameObject {
+                draw() {
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height);
+                    context.fillStyle = "#1313ef";
+                    context.fill();
+                    
+                /*if(this.collision == true && frog.speedX == 0) {
+                    frog.x = 336;
+                    frog.y = 655;
+                    frog.lifeCount --; 
+                    console.log(frog.lifeCount);
+                        }*/
+                
+                }
+            }
+            /*class DieWater extends GameObject {
+                draw(){
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height);
+                    context.fillStyle = "red";
+                    context.fill();
+                }
+            }*/
             class Frog extends GameObject {
+                constructor(startX, startY, width, height, speedX, speedY){
+                    super(startX, startY, width, height, speedX, speedY);
+                    this.frameCounter = 0;
+                    this.animationFrames = 3;
+                    this.frameTimeCounter = 0;
+                    this.frameRate = 6;
+                    this.movementDirection = "Up";
+                }
+               
                 moveUp() {
                     if(this.y > 100) {
                     this.y = this.y - 48;
-
+                    this.movementDirection = "Up";
                     }
                 }
                 moveDown() {
                     if(this.y < canvas.height - 100) {
                     this.y = this.y + 48;
+                    this.movementDirection = "Down";
                     }
                 }
                 moveLeft() {
                     if(this.x > 15) {
                     this.x = this.x - 47;
+                    this.movementDirection = "Left";
                     }
                 }
                 moveRight() {
                     if(this.x < 600) {
                     this.x = this.x + 47;
+                    this.movementDirection = "Right";
+                    }
+                }
+                update(deltaTime) {
+                    this.frameTimeCounter += deltaTime;
+                    if(this.frameTimeCounter > 1000 / this.frameRate) {
+                        this.frameTimeCounter = 0;
+                        this.frameCounter++;
+
+                        if(this.frameCounter >= this.animationFrames) {
+                            this.frameCounter = 0;
+                        }
                     }
                 }
                 draw() {
-                    context.drawImage(froggerSheet, 42, 51, 40, 43,
-                    this.x, this.y, this.width, this.height);
+                    let animationStartX = 0;
+                    switch(this.movementDirection) {
+                        case "Up":
+                        animationStartX = 4;
+                        break;
+
+                        case "Down":
+                        animationStartX = 286;
+                        break;
+
+                        case "Left":
+                        animationStartX = 411;
+                        break;
+
+                        case "Right":
+                        animationStartX = 161;
+                        break;
+                    }
+                    context.drawImage(froggerSheet,
+                        animationStartX + this.frameCounter * 35 + 3 * this.frameCounter , 25, 35, 43,
+                        this.x, this.y, this.width, this.height);
                 }
+                    
+                
             }
             class Car_1 extends GameObject {
                 draw() {
@@ -101,6 +168,7 @@
                         this.x = canvas.width + this.width;
                     }
                 }
+               
             }
             class Car_2 extends GameObject {
                 draw() {
@@ -125,7 +193,7 @@
                     context.drawImage(froggerSheet, 372, 1008, 52, 46,
                     this.x, this.y, this.width, this.height);
                     if(this.x > canvas.width + 130) {
-                        this.x = 0 - this.width ;
+                        this.x = 0 - this.width;
                     }
                 }
             }
@@ -152,7 +220,10 @@
                     if(this.collision == false && this.hitching == true) {
                             frog.speedX = 0;
                             this.hitching = false;
-                    }   
+                    }
+                    if(this.x > (canvas.width + this.width)) {
+                        this.x = 0 - this.width ;
+                    }  
                 }
             }
             class SmallLog extends GameObject {
@@ -161,6 +232,7 @@
                     this.x, this.y, this.width, this.height);
 
                     if(this.collision == true) {
+                        
                         if((this.x + this.width) > (frog.x + frog.width-15)&& 
                             (this.x + this.width - 10) < (frog.x + this.width)) {
                             this.hitching = true;
@@ -171,10 +243,12 @@
                             frog.speedX = 0;
                             this.hitching = false;
                     }
+                    if(this.x > (canvas.width + this.width + 140)) {
+                        this.x = 0 - this.width ;
+                    }
                 }
                     
             }
-            
             class HugeLog extends GameObject {
                 draw() {
                     context.drawImage(froggerSheet, 1732, 1104, 170, 32,
@@ -191,6 +265,9 @@
                             frog.speedX = 0;
                             this.hitching = false;
                     }
+                    if(this.x > (canvas.width + this.width + 129)) {
+                        this.x = 0 - this.width ;
+                    }
                 }
             }
             class PurpleThing extends Scenery {
@@ -204,22 +281,23 @@
                     context.drawImage(froggerSheet, 1189, 429, 46, 30,
                     this.x, this.y, this.width, this.height);
                 }
-            }
-            class Water extends Scenery {
+            } 
+            class JumpSpace extends GameObject {
                 draw() {
-                context.beginPath();
-                context.rect(this.x, this.y, this.width, this.height);
-                context.fillStyle = '#1313ef';
-                context.fill();
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height);
+                    context.fillStyle = "yellow";
+                    context.fill();
                 }
             }
             class Turtle extends GameObject {
                 draw() {
-                    context.drawImage(froggerSheet, 1287, 441, 43, 31,
+                    context.drawImage(froggerSheet, 1287, 441, 46, 31,
                     this.x, this.y, this.width, this.height);
                     if(this.collision == true) {
                         if((this.x + this.width) > (frog.x + frog.width-11) && 
                             (this.x + this.width) < (frog.x + frog.width + 19)){
+                     
                             this.hitching = true;
                             frog.speedX = this.speedX;
                         }
@@ -227,6 +305,14 @@
                     if(this.collision == false && this.hitching == true) {
                             frog.speedX = 0;
                             this.hitching = false;
+
+                           
+                    }
+                    
+                    
+                    
+                    if(this.x <-188){ 
+                        this.x = canvas.width + this.width;
                     }
                 }
             }
@@ -245,37 +331,62 @@
                 }
             }
 
-            
-           
-
-            const water = new Water(0, 55, canvas.width, 306, 0, 0);
+            const objectStorage = [];
+            /*let water_counter = 0;
+            for(let i = 0; i < 5; i++) {
+                objectStorage.push(new Water(0, 140 + water_counter, canvas.width, 5, 0, 0));
+                water_counter = water_counter + 50;
+            }*/
+            const water = new Water(0, 80, canvas.width, 283, 0, 0);
+            objectStorage.push(water);
+            /*const dieWater = new DieWater(0, 140, canvas.width, 5, 0, 0);
+            const dieWater_2 = new DieWater(0, 190, canvas.width, 5, 0, 0);
+            const dieWater_3 = new DieWater(0, 240, canvas.width, 5, 0, 0);
+            const dieWater_4 = new DieWater(0, 290, canvas.width, 5, 0, 0);
+            const dieWater_5 = new DieWater(0, 340, canvas.width, 5, 0, 0);
+            objectStorage.push(dieWater);
+            objectStorage.push(dieWater_2);
+            objectStorage.push(dieWater_3);
+            objectStorage.push(dieWater_4);
+            objectStorage.push(dieWater_5);*/
+            const jumpSpace = new JumpSpace(0, 332, canvas.width, 1, 0, 0);
             const frog = new Frog(336, 655, 38, 38, 0, 0);
-            const car_1 = new Car_1(650, 604, 48, 40, -0.75, 0);
-            const car_1_2 = new Car_1(1000, 604, 48, 40, -0.75, 0);
-            const car_1_3 = new Car_1(1700, 604, 48, 40, -0.75, 0);
-            const car_2 = new Car_2(1, 556, 38, 40, 1, 0);
-            const car_2_2 = new Car_2(-265, 556, 38, 40, 1, 0);
-            const car_2_3 = new Car_2(-500, 556, 38, 40, 1, 0);
-            const car_3 = new Car_3(690, 512, 49, 34, -1.2, 0);
-            const car_3_2 = new Car_3(960, 512, 49, 34, -1.2, 0);
-            const car_3_3 = new Car_3(1295, 512, 49, 34, -1.2, 0);
-            const car_4 = new Car_4(250, 460, 50, 44, 1, 0);
-            const car_4_2 = new Car_4(-100, 460, 50, 44, 1, 0);
-            const car_4_3 = new Car_4(-400, 460, 50, 44, 1, 0);
-            const car_5 = new Car_5(550, 414, 85, 34, -1.2, 0);
-            const car_5_2 = new Car_5(926, 414, 85, 34, -1.2, 0);
-            const car_5_3 = new Car_5(1188, 414, 85, 34, -1.2, 0);
-            const bigLog = new BigLog(1, 125, 140, 44, 2, 0); 
-            const smallLog = new SmallLog(10, 272, 90, 38, 1.5, 0);
-            const hugeLog = new HugeLog(1, 222, 185, 38, 2, 0);
+
+            const car_1 = new Car_1(670, 604, 48, 40, -45, 0);
+            const car_1_2 = new Car_1(1050, 604, 48, 40, -45, 0);
+            const car_1_3 = new Car_1(1400, 604, 48, 40, -45, 0);
+            const car_2 = new Car_2(1, 556, 38, 40, 60, 0);
+            const car_2_2 = new Car_2(-265, 556, 38, 40, 60, 0);
+            const car_2_3 = new Car_2(-500, 556, 38, 40, 60, 0);
+            const car_3 = new Car_3(690, 512, 49, 34, -72, 0);
+            const car_3_2 = new Car_3(960, 512, 49, 34, -72, 0);
+            const car_3_3 = new Car_3(1295, 512, 49, 34, -72, 0);
+            const car_4 = new Car_4(250, 460, 50, 44, 60, 0);
+            const car_4_2 = new Car_4(-100, 460, 50, 44, 60, 0);
+            const car_4_3 = new Car_4(-400, 460, 50, 44, 60, 0);
+            const car_5 = new Car_5(550, 414, 85, 34, -72, 0);
+            const car_5_2 = new Car_5(926, 414, 85, 34, -72, 0);
+            const car_5_3 = new Car_5(1188, 414, 85, 34, -72, 0);
+
+            const bigLog = new BigLog(196, 125, 140, 44, 120, 0);
+            const bigLog_2 = new BigLog(-15, 125, 140, 44, 120, 0);
+            const bigLog_3 = new BigLog(-245, 125, 140, 44, 120, 0);
+            const bigLog_4 = new BigLog(-475, 125, 140, 44, 120, 0);
+            const smallLog = new SmallLog(1, 272, 90, 38, 90, 0);
+            const smallLog_2 = new SmallLog(-271, 272, 90, 38, 90, 0);
+            const smallLog_3 = new SmallLog(-542, 272, 90, 38, 90, 0);
+            const smallLog_4 = new SmallLog(-770, 272, 90, 38, 90, 0);
+            const hugeLog = new HugeLog(-186, 222, 185, 38, 120, 0);
+            const hugeLog_2 = new HugeLog(-586, 222, 185, 38, 120, 0);
+            const hugeLog_3 = new HugeLog(-986, 222, 185, 38, 120, 0);
+
             const goal_1 = new Goal(30, 60, 50, 50, 0, 0);
             const goal_2 = new Goal(164, 60, 50, 50, 0, 0);
             const goal_3 = new Goal(302, 60, 50, 50, 0, 0);
             const goal_4 = new Goal(440, 60, 50, 50, 0, 0);
             const goal_5 = new Goal(canvas.width - 90, 60, 50, 50, 0, 0);
+        
             
-
-            const objectStorage = [];
 
             let counter_bottom = 0;
             let counter_mid_black = 0;
@@ -289,14 +400,15 @@
                 counter_mid_blue = counter_mid_blue + 46;
             }
 
-            objectStorage.push(water);
+            
+           
             objectStorage.push(goal_1);
             objectStorage.push(goal_2);
             objectStorage.push(goal_3);
             objectStorage.push(goal_4);
             objectStorage.push(goal_5);
+
             let counter_bottom_greenery = 0;
-            
             for(let i = 0; i < 6; i++) {
                 if(i > 0 ){
                     
@@ -310,16 +422,48 @@
             }
             }
 
-
+            //Drippel turtle
             let triple_turtle = 0;
             for(let i = 0; i < 3; i++) {
-                objectStorage.push(new Turtle(620 - triple_turtle, 321, 46, 34, -1.35, 0));
-                triple_turtle = triple_turtle + 47;
+                objectStorage.push(new Turtle(620 + triple_turtle, 321, 46, 34, -81, 0));
+                triple_turtle = triple_turtle + 44;
             }
+            let triple_turtle_2 = 0;
+            for(let i = 0; i < 3; i++) {
+                objectStorage.push(new Turtle(851 + triple_turtle_2, 321, 46, 34, -81, 0));
+                triple_turtle_2 = triple_turtle_2 + 44;
+            }
+            let triple_turtle_3 = 0;
+            for(let i = 0; i < 3; i++) {
+                objectStorage.push(new Turtle(1082 + triple_turtle_3, 321, 46, 34, -81, 0));
+                triple_turtle_3 = triple_turtle_3 + 44;
+            }
+            let triple_turtle_4 = 0;
+            for(let i = 0; i < 3; i++) {
+                objectStorage.push(new Turtle(1313 + triple_turtle_4, 321, 46, 34, -81, 0));
+                triple_turtle_4 = triple_turtle_4 + 44;
+            }
+            //Dubbel turtle
             let dual_turtle = 0;
             for(let i = 0; i < 2; i++) {
-                objectStorage.push(new Turtle(620 - dual_turtle, 176, 46, 34, -1.35, 0));
-                dual_turtle = dual_turtle + 47;
+                objectStorage.push(new Turtle(620 - dual_turtle, 176, 46, 34, -81, 0));
+                dual_turtle = dual_turtle + 44;
+            }
+            let dual_turtle_2 = 0;
+            for(let i = 0; i < 2; i++) {
+                objectStorage.push(new Turtle(855 - dual_turtle_2, 176, 46, 34, -81, 0));
+                dual_turtle_2 = dual_turtle_2 + 44;
+            }
+            let dual_turtle_3 = 0;
+            for(let i = 0; i < 2; i++) {
+                objectStorage.push(new Turtle(1090 - dual_turtle_3, 176, 46, 34, -81, 0));
+                dual_turtle_3 = dual_turtle_3 + 44;
+            }
+            let dual_turtle_4 = 0;
+            for(let i = 0; i < 2; i++) {
+                objectStorage.push(new Turtle(1325 - dual_turtle_4, 176, 46, 34, -81, 0));
+                dual_turtle_4 = dual_turtle_4 + 44;
+                
             }
             
             objectStorage.push(car_1);
@@ -337,21 +481,32 @@
             objectStorage.push(car_5);
             objectStorage.push(car_5_2);
             objectStorage.push(car_5_3);
+
             objectStorage.push(bigLog);
+            objectStorage.push(bigLog_2);
+            objectStorage.push(bigLog_3);
+            objectStorage.push(bigLog_4);
             objectStorage.push(smallLog);
+            objectStorage.push(smallLog_2);
+            objectStorage.push(smallLog_3);
+            objectStorage.push(smallLog_4);
             objectStorage.push(hugeLog);
+            objectStorage.push(hugeLog_2);
+            objectStorage.push(hugeLog_3);
             
             objectStorage.push(frog);
-
-
             
-            
-            function refreshScreen() {
+            lastTimeStamp = 0;
+            function refreshScreen(timeStamp) {
+                let deltaTime = timeStamp - lastTimeStamp;
+                lastTimeStamp = timeStamp;
+                console.log(deltaTime);
                 context.clearRect(0, 0, canvas.width, canvas.height);
 
                 for(let i = 0; i < objectStorage.length; i++) {
-                    objectStorage[i].update();
+                    objectStorage[i].update(deltaTime);
                     objectStorage[i].draw();
+                    
                 }
                 
                 window.requestAnimationFrame(refreshScreen);
@@ -363,7 +518,6 @@
             }
             froggerSheet.src = 'froggerSheet.png';
             
-
             window.addEventListener('keydown', function(event){
                 switch(event.keyCode) {
                     case 37:
