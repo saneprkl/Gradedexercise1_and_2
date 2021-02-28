@@ -14,10 +14,6 @@
             canvas.width = 672;
             canvas.height = 744;
             lastTimeStamp = 0;
-            
-
-
-            
 
             class GameObject {
                 constructor(startX, startY, width, height, speedX, speedY) {
@@ -29,16 +25,13 @@
                     this.speedY = speedY;  
                     this.collision = false;
                     this.hitching = false;
-                    this.isCar = false;
+                    this.isCar = false;        
                 }
 
                 update(deltaTime) {
                     this.y = this.y + this.speedY * deltaTime / 1000;
                     this.x = this.x + this.speedX * deltaTime / 1000; 
-                    
-                    
-            
-                
+                      
                     if(this != frog) {
                         if(((this.x + this.width) > frog.x)
                             && (this.x < (frog.x + frog.width))
@@ -56,48 +49,6 @@
                         RemoveLife();
                         console.log(frog.lifeCount);
                     }
-                        
-                    /*
-                    if(frog.lifeCount == 2){
-                        life_3.x = -40;
-                    }
-                    if(frog.lifeCount == 1){
-                        life_2.x = -40;
-                    }
-                    if(frog.lifeCount == 0){
-                        life_1.x = -40;
-                    }*/
-                        /*let lifeToSide = 0; 
-                        if(frog.lifeCount == 3) {
-                    
-                    objectStorage.push(new Life(7 + lifeToSide, canvas.height - 45, 18, 18,0,0));
-                    objectStorage.push(new Life(7 + 22, canvas.height - 45, 18, 18,0,0));
-                    objectStorage.push(new Life(7 + 44, canvas.height - 45, 18, 18,0,0));
-                }
-                    if(frog.lifeCount == 2) {
-                    context.clearRect(7, 51, canvas.height - 45, 18,18,0,0);
-                    objectStorage.push(new Life(7 + lifeToSide, canvas.height - 45, 18, 18,0,0));
-                    objectStorage.push(new Life(7 + 22, canvas.height - 45, 18, 18,0,0));
-                    
-                }
-                if(frog.lifeCount == 1) {
-                    context.clearRect(7, 29, canvas.height - 45, 18,18,0,0);
-                    objectStorage.push(new Life(7 + lifeToSide, canvas.height - 45, 18, 18,0,0));
-                    
-                }*/
-                        
-                       
-                    
-                } /*
-                LifeCount() {
-                    let lifeToSide = 0;
-                    for(let i = 0; frog.lifeCount > i; i++) {
-                        objectStorage.push(new Life(7 + lifeToSide, canvas.height - 45, 18, 18,0,0));
-                        lifeToSide = lifeToSide + 22;
-                    }
-                }*/
-                draw() {
-                    console.log('draw not implemented.');
                 }
             }
             
@@ -110,46 +61,142 @@
                     this.speedX = speedX;
                     this.speedY = speedY;
                 }
-                update(){}
+                update(){
+                }    
                 draw() {
                     console.log('draw not implemented.');
+                }
+            }
+            class Lord_of_time extends Scenery {
+                draw() {
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height, this.speedX, this.speedY);
+                    context.fillStyle = 'black';
+                    context.fill();
+                }
+                update() {
+                    if(this.x > 96) { 
+                        RemoveLife();
+                    }
+                    if(this.x < 98) {
+                        this.x = this.x + this.speedX * deltaTime / 1000;     
+                    }
                 }
             }
             class Life extends GameObject {
                 draw() {
                     context.drawImage(froggerSheet, 663, 48, 25, 25,
-                    this.x, this.y, this.width, this.height);
-
-                    
+                    this.x, this.y, this.width, this.height); 
                 }
-                
-                
+   
             }
-            //#1313ef
+            class TimeBlock extends Scenery {
+                draw() {
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height)
+                    context.fillStyle = '#7120a3';
+                    context.fill();       
+                }
+            }
+            class Time extends Scenery {
+                draw() {
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height)
+                    context.fillStyle = 'White';
+                    context.fill();
+                }
+            }
+            /*#1313ef*/
             class Water extends GameObject {
                 draw() {
                     context.beginPath();
                     context.rect(this.x, this.y, this.width, this.height);
                     context.fillStyle = "#1313ef";
-                    context.fill();
-                    
-                /*if(this.collision == true && frog.speedX == 0) {
-                    frog.x = 336;
-                    frog.y = 655;
-                    frog.lifeCount --; 
-                    console.log(frog.lifeCount);
-                        }*/
-                
+                    context.fill();        
                 }
             }
-            /*class DieWater extends GameObject {
+            class DieWaterLeft extends GameObject {
                 draw(){
                     context.beginPath();
                     context.rect(this.x, this.y, this.width, this.height);
-                    context.fillStyle = "red";
+                    context.fillStyle = "#1313ef";
                     context.fill();
+                    if(this.x < -70 ) {
+                        this.x = 768 + 76;
+                    }  
+                    if(this.collision == true && frog.speedX == 0) {
+                        RemoveLife();
+                    }
                 }
-            }*/
+            }
+            class DieWaterLeft_2 extends GameObject {
+                draw(){
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height);
+                    context.fillStyle = "#1313ef";
+                    context.fill();
+                    if(this.x < -137 ) {
+                        this.x = 768 + 38;
+                    }   
+                    if(this.collision == true && frog.speedX == 0) {
+                        RemoveLife();
+                    }
+                }
+            }
+            class DieWaterRight extends GameObject {
+                draw(){
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height);
+                    context.fillStyle = "#1313ef";
+                    context.fill();
+                    if(this.x > canvas.width + 60 ) {
+                        this.x = -344;
+                    }
+                    if(this.collision == true && frog.speedX == 0) {
+                        RemoveLife();
+                    }
+                }
+            }
+            class DieWaterRight_2 extends GameObject {
+                draw(){
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height);
+                    context.fillStyle = "#1313ef";
+                    context.fill();
+                    if(this.x > canvas.width + 60 ) {
+                        this.x = -460;
+                    }     
+                    if(this.collision == true && frog.speedX == 0) {
+                        RemoveLife();
+                    }
+                }
+            }
+            class DieWaterRight_3 extends GameObject {
+                draw(){
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height);
+                    context.fillStyle = "#1313ef";
+                    context.fill();
+                    if(this.x > canvas.width + this.width) {
+                        this.x = -270;
+                    }    
+                    if(this.collision == true && frog.speedX == 0) {
+                        RemoveLife();
+                    }
+                }
+            }
+            class DieWaterStart extends GameObject {
+                draw(){
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height);
+                    context.fillStyle = "#1313ef";
+                    context.fill(); 
+                    if(this.collision == true && frog.speedX == 0) {
+                        RemoveLife();
+                    }
+                }
+            }
+            
             class Frog extends GameObject {
                 constructor(startX, startY, width, height, speedX, speedY){
                     super(startX, startY, width, height, speedX, speedY);
@@ -160,29 +207,28 @@
                     this.movementDirection = "Up";
                     this.lifeCount = 3;
                 }
-               
                 moveUp() {
-                    if(this.y > 100) {
-                    this.y = this.y - 48;
-                    this.movementDirection = "Up";
+                    if(this.y > 100) {            
+                    this.y = this.y - 48;              
+                    this.movementDirection = "Up";             
                     }
                 }
                 moveDown() {
                     if(this.y < canvas.height - 100) {
                     this.y = this.y + 48;
-                    this.movementDirection = "Down";
+                    this.movementDirection = "Down";              
                     }
                 }
                 moveLeft() {
                     if(this.x > 15) {
                     this.x = this.x - 47;
-                    this.movementDirection = "Left";
+                    this.movementDirection = "Left";            
                     }
                 }
                 moveRight() {
                     if(this.x < 600) {
                     this.x = this.x + 47;
-                    this.movementDirection = "Right";
+                    this.movementDirection = "Right";     
                     }
                 }
                 update(deltaTime) {
@@ -192,18 +238,15 @@
                         this.frameCounter++;
                         if(this.frameCounter >= this.animationFrames) {
                             this.frameCounter = 0;
-                        }
-                        
-                    }
+                        }             
+                    }           
                 }
-                
-                
-
                 draw() {
                     let animationStartX = 0;
                     switch(this.movementDirection) {
                         case "Up":
                         animationStartX = 4;
+
                         break;
 
                         case "Down":
@@ -221,16 +264,15 @@
                     context.drawImage(froggerSheet,
                         animationStartX + this.frameCounter * 35 + 3 * this.frameCounter , 25, 35, 43,
                         this.x, this.y, this.width, this.height);
+
                     if (this.x < -22 || this.x > canvas.width - 22) {
                         RemoveLife();
                     }
-                }
-                    
-                
+                } 
+                   
             }
             
-            class Car_1 extends GameObject {
-                
+            class Car_1 extends GameObject {            
                 draw() {
                     this.isCar = true;
                     context.drawImage(froggerSheet, 37, 1009, 52, 46,
@@ -238,9 +280,7 @@
                     if(this.x <-165){ 
                         this.x = canvas.width + this.width;
                     }
-
-                }
-               
+                }             
             }
             class Car_2 extends GameObject {
                 draw() {
@@ -264,7 +304,7 @@
             }
             class Car_4 extends GameObject {
                 draw() {
-                    this.isCar = true;
+                    this.isCar = true; 
                     context.drawImage(froggerSheet, 372, 1008, 52, 46,
                     this.x, this.y, this.width, this.height);
                     if(this.x > canvas.width + 130) {
@@ -274,7 +314,7 @@
             }
             class Car_5 extends GameObject {
                 draw() {
-                    this.isCar = true;
+                    this.isCar = true; 
                     context.drawImage(froggerSheet, 189, 1014, 85, 34,
                     this.x, this.y, this.width, this.height);
                     if(this.x <-165){ 
@@ -284,11 +324,12 @@
             }
             class BigLog extends GameObject {
                 draw() {
-                    context.drawImage(froggerSheet, 1484, 917, 132, 36,
+                    context.drawImage(froggerSheet, 1484, 911, 132, 48,
                     this.x, this.y, this.width, this.height);
                     if(this.collision == true) {
                         if((this.x + this.width) > (frog.x + frog.width-15)&& 
                             (this.x + this.width - 10) < (frog.x + this.width)) {
+                            frog.hitching = true;
                             this.hitching = true;
                             if(deltaTime > 4 && deltaTime < 9) {
                             frog.x = frog.x + this.speedX / 144;
@@ -300,23 +341,22 @@
                     }
                     if(this.collision == false && this.hitching == true) {
                             frog.speedX = 0;
-                            this.hitching = false;
-                            
+                            frog.hitching = false;
+                            this.hitching = false;                          
                     }
-                    if(this.x > (canvas.width + this.width)) {
-                        this.x = 0 - this.width ;
+                    if(this.x > canvas.width + this.width) {
+                        this.x = -190;
                     }  
                 }
             }
             class SmallLog extends GameObject {
                 draw() {
-                    context.drawImage(froggerSheet, 1568, 868, 74, 32,
+                    context.drawImage(froggerSheet, 1568, 865, 74, 46,
                     this.x, this.y, this.width, this.height);
-
                     if(this.collision == true) {
-                        
                         if((this.x + this.width) > (frog.x + frog.width-15)&& 
                             (this.x + this.width - 10) < (frog.x + this.width)) {
+                            frog.hitching = true;
                             this.hitching = true;
                             if(deltaTime > 4 && deltaTime < 9) {
                                 frog.x = frog.x + this.speedX / 144;
@@ -328,22 +368,23 @@
                     }
                     if(this.collision == false && this.hitching == true) {
                             frog.speedX = 0;
+                            frog.hitching = false;
                             this.hitching = false;
                     }
-                    if(this.x > (canvas.width + this.width + 140)) {
-                        this.x = 0 - this.width ;
+                    if(this.x > (canvas.width + this.width + 50)) {
+                        this.x = -172 - this.width ;
                     }
-                }
-                    
+                }     
             }
             class HugeLog extends GameObject {
                 draw() {
-                    context.drawImage(froggerSheet, 1732, 1104, 170, 32,
+                    context.drawImage(froggerSheet, 1732, 1099, 170, 44,
                     this.x, this.y, this.width, this.height);
 
                     if(this.collision == true) {
                         if((this.x + this.width) > (frog.x + frog.width-15)&& 
                             (this.x + this.width - 10) < (frog.x + this.width)) {
+                            frog.hitching = true;
                             this.hitching = true;
                             if(deltaTime > 4 && deltaTime < 9) {
                                 frog.x = frog.x + this.speedX / 144;
@@ -354,10 +395,11 @@
                     }
                     if(this.collision == false && this.hitching == true) {
                             frog.speedX = 0;
+                            frog.hitching = false;
                             this.hitching = false;
                     }
                     if(this.x > (canvas.width + this.width + 129)) {
-                        this.x = 0 - this.width ;
+                        this.x = -20 - this.width ;
                     }
                 }
             }
@@ -372,44 +414,83 @@
                     context.drawImage(froggerSheet, 1189, 429, 46, 30,
                     this.x, this.y, this.width, this.height);
                 }
-            } 
-            class JumpSpace extends GameObject {
-                draw() {
-                    context.beginPath();
-                    context.rect(this.x, this.y, this.width, this.height);
-                    context.fillStyle = "yellow";
-                    context.fill();
-                }
-            }
+            }   
             class Turtle extends GameObject {
                 draw() {
-                    context.drawImage(froggerSheet, 1287, 441, 46, 31,
+                    context.drawImage(froggerSheet, 1287, 436, 46, 41,
                     this.x, this.y, this.width, this.height);
-                    if(this.collision == true) {
-                        if((this.x + this.width) > (frog.x + frog.width-11) && 
-                            (this.x + this.width) < (frog.x + frog.width + 19)){
-                     
-                            this.hitching = true;
-                            if(deltaTime > 4 && deltaTime < 9) {
-                            frog.x = frog.x + this.speedX / 144;
-                            }
-                            else {
-                                frog.x = frog.x + this.speedX / 60;
-                            }
-                        }
-                    }
-                    if(this.collision == false && this.hitching == true) {
-                            frog.speedX = 0;
-                            this.hitching = false;
 
-                           
-                    }
-                    
-                    
-                    
-                    if(this.x <-188){ 
+                    if(this.x <-195){ 
                         this.x = canvas.width + this.width;
                     }
+                    if(this != frog) {
+                        if(((this.x + this.width) > frog.x)
+                            && (this.x < (frog.x + frog.width))
+                            && ((this.y + this.height) > frog.y)
+                            && (this.y < (frog.y + frog.height))) {
+                                this.collision = true;
+                                if(this.collision == true && frog.y < 320) {
+                                    if((this.x + this.width) > (frog.x + frog.width-11) && 
+                                        (this.x + this.width) < (frog.x + frog.width + 19)){
+                                        frog.hitching = true;
+                                        this.hitching = true;
+                                    if(deltaTime > 4 && deltaTime < 9) {
+                                        frog.x = frog.x + this.speedX / 144;
+                                    }
+                                    if(deltaTime > 9) {
+                                        frog.x = frog.x + this.speedX / 60;
+                                    }
+                                }    
+                            }
+                            if(this.collision == false && this.hitching == true) {
+                                frog.speedX = 0;
+                                this.hitching = false;
+                                frog.hitching = false; 
+                            }
+                        }   else {
+                                this.collision = false; 
+                            }
+                    }
+                }
+            }
+            class Turtle_2 extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 1287, 436, 46, 41,
+                    this.x, this.y, this.width, this.height);
+
+                    if(this.x <-195){ 
+                        this.x = canvas.width + 78;
+                    }
+                    if(this != frog) {
+                        if(((this.x + this.width) > frog.x)
+                            && (this.x < (frog.x + frog.width))
+                            && ((this.y + this.height) > frog.y)
+                            && (this.y < (frog.y + frog.height))) {
+                                this.collision = true;
+                                if(this.collision == true && frog.y < 320) {
+                                    if((this.x + this.width) > (frog.x + frog.width-11) && 
+                                        (this.x + this.width) < (frog.x + frog.width + 19)){
+                                        frog.hitching = true;
+                                        this.hitching = true;
+                                    if(deltaTime > 4 && deltaTime < 9) {
+                                        frog.x = frog.x + this.speedX / 144;
+                                    }
+                                    if(deltaTime > 9) {
+                                        frog.x = frog.x + this.speedX / 60;
+                                    }
+                                }    
+                            }
+                            if(this.collision == false && this.hitching == true) {
+                                frog.speedX = 0;
+                                this.hitching = false;
+                                frog.hitching = false; 
+                            }
+                        }   else {
+                                this.collision = false; 
+                            
+                            }
+                        
+                    }             
                 }
             }
             class Goal extends GameObject {
@@ -426,28 +507,46 @@
                     this.x, this.y, this.width, this.height);
                 }
             }
-
-            let objectStorage = [];
-            const Lifes = { frogLife: 3 };
-
-            /*let water_counter = 0;
-            for(let i = 0; i < 5; i++) {
-                objectStorage.push(new Water(0, 140 + water_counter, canvas.width, 5, 0, 0));
-                water_counter = water_counter + 50;
-            }*/
+            const objectStorage = [];
             const water = new Water(0, 80, canvas.width, 283, 0, 0);
             objectStorage.push(water);
-            /*const dieWater = new DieWater(0, 140, canvas.width, 5, 0, 0);
-            const dieWater_2 = new DieWater(0, 190, canvas.width, 5, 0, 0);
-            const dieWater_3 = new DieWater(0, 240, canvas.width, 5, 0, 0);
-            const dieWater_4 = new DieWater(0, 290, canvas.width, 5, 0, 0);
-            const dieWater_5 = new DieWater(0, 340, canvas.width, 5, 0, 0);
-            objectStorage.push(dieWater);
-            objectStorage.push(dieWater_2);
-            objectStorage.push(dieWater_3);
-            objectStorage.push(dieWater_4);
-            objectStorage.push(dieWater_5);*/
-            const jumpSpace = new JumpSpace(0, 332, canvas.width, 1, 0, 0);
+            
+            const dieWater_start_1 = new DieWaterStart(0, 340, 600, 5, -81, 0);
+            const dieWater_start_2 = new DieWaterStart(120, 290, 600, 5, 90, 0);
+            const dieWater_start_3 = new DieWaterStart(25, 240, 600, 5, 120, 0);
+            const dieWater_start_4 = new DieWaterStart(0, 190, 560, 5, -81, 0);
+    
+            objectStorage.push(dieWater_start_1);
+            objectStorage.push(dieWater_start_2);
+            objectStorage.push(dieWater_start_3);
+            objectStorage.push(dieWater_start_4);
+            
+            let die_row_1 = 0;
+            for(let i = 0; i < 4; i++){
+                objectStorage.push(new DieWaterLeft(768 + die_row_1, 340, 67, 5, -81, 0));
+                die_row_1 = die_row_1 + 228;
+            }
+            let die_row_2 = 0;
+            for(let i = 0; i < 4; i++) {
+                objectStorage.push(new DieWaterRight(-145 + die_row_2, 290, 115, 5, 90, 0));
+                die_row_2 = die_row_2 - 272;
+            }
+            let die_row_3 = 0;
+            for(let i = 0; i < 3; i++) {
+                objectStorage.push(new DieWaterRight_2(-375 + die_row_3, 240, 160, 5, 120, 0));
+                die_row_3 = die_row_3 - 395;
+            }
+            let die_row_4 = 0;
+            for(let i = 0; i < 4; i++){
+                objectStorage.push(new DieWaterLeft_2(685 + die_row_4, 190, 105, 5, -81, 0));
+                die_row_4 = die_row_4 + 236;
+            }
+            let die_row_5 = 0;
+            for(let i = 0; i < 4; i++) {
+                objectStorage.push(new DieWaterRight_3(110 + die_row_5, 145, 60, 5, 120, 0));
+                die_row_5 = die_row_5 - 251;
+            }
+
             const frog = new Frog(336, 655, 38, 38, 0, 0);
 
             const car_1 = new Car_1(670, 604, 48, 40, -45, 0);
@@ -466,17 +565,17 @@
             const car_5_2 = new Car_5(926, 414, 85, 34, -60, 0);
             const car_5_3 = new Car_5(1188, 414, 85, 34, -60, 0);
 
-            const bigLog = new BigLog(196, 125, 140, 44, 120, 0);
-            const bigLog_2 = new BigLog(-15, 125, 140, 44, 120, 0);
-            const bigLog_3 = new BigLog(-245, 125, 140, 44, 120, 0);
-            const bigLog_4 = new BigLog(-475, 125, 140, 44, 120, 0);
-            const smallLog = new SmallLog(1, 272, 90, 38, 90, 0);
-            const smallLog_2 = new SmallLog(-271, 272, 90, 38, 90, 0);
-            const smallLog_3 = new SmallLog(-542, 272, 90, 38, 90, 0);
-            const smallLog_4 = new SmallLog(-770, 272, 90, 38, 90, 0);
-            const hugeLog = new HugeLog(-186, 222, 185, 38, 120, 0);
-            const hugeLog_2 = new HugeLog(-586, 222, 185, 38, 120, 0);
-            const hugeLog_3 = new HugeLog(-986, 222, 185, 38, 120, 0);
+            const bigLog = new BigLog(196, 121, 140, 49, 120, 0);
+            const bigLog_2 = new BigLog(-55, 121, 140, 49, 120, 0);
+            const bigLog_3 = new BigLog(-306, 121, 140, 49, 120, 0);
+            const bigLog_4 = new BigLog(-557, 121, 140, 49, 120, 0);
+            const smallLog = new SmallLog(1, 268, 90, 50, 90, 0);
+            const smallLog_2 = new SmallLog(-271, 268, 90, 50, 90, 0);
+            const smallLog_3 = new SmallLog(-543, 268, 90, 50, 90, 0);
+            const smallLog_4 = new SmallLog(-815, 268, 90, 50, 90, 0);
+            const hugeLog = new HugeLog(-186, 218, 185, 47, 120, 0);
+            const hugeLog_2 = new HugeLog(-586, 218, 185, 47, 120, 0);
+            const hugeLog_3 = new HugeLog(-986, 218, 185, 47, 120, 0);
 
             const goal_1 = new Goal(30, 60, 50, 50, 0, 0);
             const goal_2 = new Goal(164, 60, 50, 50, 0, 0);
@@ -484,9 +583,6 @@
             const goal_4 = new Goal(440, 60, 50, 50, 0, 0);
             const goal_5 = new Goal(canvas.width - 90, 60, 50, 50, 0, 0);
         
-            
-            
-
             let counter_bottom = 0;
             let counter_mid_black = 0;
             let counter_mid_blue = 0;
@@ -502,103 +598,41 @@
             let life_1 = new Life(7, canvas.height - 45, 18, 18, 0, 0);
             let life_2 = new Life(7 + 22, canvas.height - 45, 18, 18, 0, 0);
             let life_3 = new Life(7 + 44, canvas.height - 45, 18, 18, 0, 0);
-
-            objectStorage.push(life_1);
-            objectStorage.push(life_2);
-            objectStorage.push(life_3);
-            
+           
             function RemoveLife() {
                 frog.x = 336;
                 frog.y = 655;
                 frog.movementDirection = "Up";
                 frog.lifeCount--;
-
                 if(frog.lifeCount == 2){
-                    life_3.x = -40;
+                    objectStorage.pop();
+                    objectStorage.pop();
+                    lord_of_time.x = time_block.x - time_block.width;
+                    
                 }
                 if(frog.lifeCount == 1){
-                    life_2.x = -40;
+                    objectStorage.pop();
+                    objectStorage.pop();
+                    lord_of_time.x = time_block.x - time_block.width;
                 }
                 if(frog.lifeCount == 0){
-                    life_1.x = -40;
+                    objectStorage.pop();
+                    objectStorage.pop();
+                    lord_of_time.x = time_block.x - time_block.width;
                 }
+                if(frog.lifeCount < 0){
+                    objectStorage.pop();
+                    let life_1 = new Life(7, canvas.height - 45, 18, 18, 0, 0);
+                    let life_2 = new Life(7 + 22, canvas.height - 45, 18, 18, 0, 0);
+                    let life_3 = new Life(7 + 44, canvas.height - 45, 18, 18, 0, 0);
+                    objectStorage.push(life_1);
+                    objectStorage.push(life_2);
+                    objectStorage.push(life_3);
+                    frog.lifeCount = 3;
+                    
+                }
+                objectStorage.push(frog);
             }
-
-            
-            
-
-            
-            
-           /* if(frog.lifeCount == 2) {        
-                let index = objectStorage.indexOf(life_3);
-                if (index > -1) { 
-                    objectStorage.splice(index, 1);
-                }
-            }*/
-
-
-            
-            
-                
-                   
-                    /*for(let i = 0; frog.lifeCount > i; i++) {
-                        objectStorage.push(new Life(7 + lifeToSide, canvas.height - 45, 18, 18,0,0));
-                        lifeToSide = lifeToSide + 22;
-                    }*/
-                   
-                  /*function LifeCount() {  
-                    
-                   
-                    if(frog.lifeCount == 2) {
-                        let index = objectStorage.indexOf(life_3);
-
-                         if (index > -1) { 
-                            objectStorage.splice(index, 1);
-                            let index = objectStorage.indexOf(life_3);
-                            if (index > -1) {
-                                objectStorage.splice(index, 1);
-                            }
-                        }
-                    }
-                }
-
-                   /*for( var i = 0; i < objectStorage.length; i++){ 
-    
-                    if ( objectStorage[i] == 'life_3' ) { 
-
-                     objectStorage.splice(i, 1); 
-                     }
-                    
-                    }*/
-                  /*  
-                } 
-                if(frog.lifeCount == 1) {
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                    context.clearRect(7 + 22, canvas.height - 45, 18, 18);
-                    objectStorage.push(new Life(7, canvas.height - 45, 18, 18, 0, 0));
-                    
-                }*/
-                /*
-                if(frog.lifeCount == 3) {
-                    
-                    objectStorage.push(new Life(7, canvas.height - 45, 18, 18, 0, 0));
-                    objectStorage.push(new Life(7 + 22, canvas.height - 45, 18, 18, 0, 0));
-                    objectStorage.push(new Life(7 + 44, canvas.height - 45, 18, 18, 0, 0));
-                }
-                    if(frog.lifeCount == 2) {
-                    objectStorage.push(new Life(7, canvas.height - 45, 18, 18, 0, 0));
-                    objectStorage.push(new Life(7 + 22, canvas.height - 45, 18, 18, 0, 0));
-                    
-                }
-                if(frog.lifeCount == 1) {
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                    context.clearRect(7 + 22, canvas.height - 45, 18, 18);
-                    objectStorage.push(new Life(7, canvas.height - 45, 18, 18, 0, 0));
-                    
-                }*/
-                
-                
-           
             objectStorage.push(goal_1);
             objectStorage.push(goal_2);
             objectStorage.push(goal_3);
@@ -608,60 +642,88 @@
             let counter_bottom_greenery = 0;
             for(let i = 0; i < 6; i++) {
                 if(i > 0 ){
-                    
                     objectStorage.push(new Green_bottom(0 + counter_bottom_greenery, 91, 26, 24, 0, 0));
                     objectStorage.push(new Green_bottom(0 + counter_bottom_greenery + 26, 91, 26, 24, 0, 0));
                     counter_bottom_greenery = counter_bottom_greenery + 138;
-                }
-                else{
+                } else {
                 objectStorage.push(new Green_bottom(0 + counter_bottom_greenery, 91, 26, 24, 0, 0));
                 counter_bottom_greenery = counter_bottom_greenery + 96;
-            }
+                }
             }
 
             //Drippel turtle
             let triple_turtle = 0;
             for(let i = 0; i < 3; i++) {
-                objectStorage.push(new Turtle(620 + triple_turtle, 321, 46, 34, -81, 0));
+                objectStorage.push(new Turtle(620 + triple_turtle, 316, 46, 45, -81, 0));
                 triple_turtle = triple_turtle + 44;
             }
             let triple_turtle_2 = 0;
             for(let i = 0; i < 3; i++) {
-                objectStorage.push(new Turtle(851 + triple_turtle_2, 321, 46, 34, -81, 0));
+                objectStorage.push(new Turtle(851 + triple_turtle_2, 316, 46, 45, -81, 0));
                 triple_turtle_2 = triple_turtle_2 + 44;
             }
             let triple_turtle_3 = 0;
             for(let i = 0; i < 3; i++) {
-                objectStorage.push(new Turtle(1082 + triple_turtle_3, 321, 46, 34, -81, 0));
+                objectStorage.push(new Turtle(1082 + triple_turtle_3, 316, 46, 45, -81, 0));
                 triple_turtle_3 = triple_turtle_3 + 44;
             }
             let triple_turtle_4 = 0;
             for(let i = 0; i < 3; i++) {
-                objectStorage.push(new Turtle(1313 + triple_turtle_4, 321, 46, 34, -81, 0));
+                objectStorage.push(new Turtle(1313 + triple_turtle_4, 316, 46, 45, -81, 0));
                 triple_turtle_4 = triple_turtle_4 + 44;
             }
+
             //Dubbel turtle
             let dual_turtle = 0;
             for(let i = 0; i < 2; i++) {
-                objectStorage.push(new Turtle(620 - dual_turtle, 176, 46, 34, -81, 0));
+                objectStorage.push(new Turtle_2(620 - dual_turtle, 172, 46, 43, -81, 0));
                 dual_turtle = dual_turtle + 44;
             }
             let dual_turtle_2 = 0;
             for(let i = 0; i < 2; i++) {
-                objectStorage.push(new Turtle(855 - dual_turtle_2, 176, 46, 34, -81, 0));
+                objectStorage.push(new Turtle_2(855 - dual_turtle_2, 172, 46, 43, -81, 0));
                 dual_turtle_2 = dual_turtle_2 + 44;
             }
             let dual_turtle_3 = 0;
             for(let i = 0; i < 2; i++) {
-                objectStorage.push(new Turtle(1090 - dual_turtle_3, 176, 46, 34, -81, 0));
+                objectStorage.push(new Turtle_2(1090 - dual_turtle_3, 172, 46, 43, -81, 0));
                 dual_turtle_3 = dual_turtle_3 + 44;
             }
             let dual_turtle_4 = 0;
             for(let i = 0; i < 2; i++) {
-                objectStorage.push(new Turtle(1325 - dual_turtle_4, 176, 46, 34, -81, 0));
-                dual_turtle_4 = dual_turtle_4 + 44;
-                
+                objectStorage.push(new Turtle_2(1325 - dual_turtle_4, 172, 46, 43, -81, 0));
+                dual_turtle_4 = dual_turtle_4 + 44; 
             }
+
+            let t_1 = new Time(canvas.width - 200, canvas.height - 35, 26, 5, 0, 0);
+            let t_2 = new Time(t_1.x + t_1.width / 2 - 2.5, canvas.height - 30, 5, 20, 0, 0);
+            let i_1 = new Time(t_1.x + t_1.width + 5, t_1.y, 5, 5, 0, 0);
+            let i_2 = new Time(t_1.x + t_1.width + 5, t_1.y + 8, 5, 17, 0, 0);
+            let m_1 = new Time(i_1.x + i_1.width + 5, i_1.y, 24, 5, 0, 0);
+            let m_2 = new Time(m_1.x, m_1.y, 5, 25, 0, 0);
+            let m_3 = new Time(m_1.x + m_2.width + 5, i_1.y, 5, 25, 0, 0);
+            let m_4 = new Time(m_3.x + m_3.width + 5, i_1.y, 5, 25, 0, 0);
+            let e_1 = new Time(m_4.x + 10, m_4.y, 5, 25, 0, 0);
+            let e_2 = new Time(m_4.x + 10, m_4.y, 18, 5, 0, 0);
+            let e_3 = new Time(m_4.x + 10, m_4.y + 10, 15, 5, 0, 0);
+            let e_4 = new Time(m_4.x + 10, m_4.y + 20, 18, 5, 0, 0);
+
+            let time_block = new TimeBlock(97, t_1.y, 375, 25, 0, 0);
+            let lord_of_time = new Lord_of_time(time_block.x - time_block.width, time_block.y - 1, time_block.width+1, 27, 7, 0);
+            
+            objectStorage.push(t_1);
+            objectStorage.push(t_2);
+            objectStorage.push(i_1);
+            objectStorage.push(i_2);
+            objectStorage.push(m_1);
+            objectStorage.push(m_2);
+            objectStorage.push(m_3);
+            objectStorage.push(m_4);
+            objectStorage.push(e_1);
+            objectStorage.push(e_2);
+            objectStorage.push(e_3);
+            objectStorage.push(e_4);
+            objectStorage.push(time_block);
             
             objectStorage.push(car_1);
             objectStorage.push(car_1_2);
@@ -690,30 +752,28 @@
             objectStorage.push(hugeLog);
             objectStorage.push(hugeLog_2);
             objectStorage.push(hugeLog_3);
+
+            objectStorage.push(lord_of_time);
+            objectStorage.push(life_1);
+            objectStorage.push(life_2);
+            objectStorage.push(life_3);
             
             objectStorage.push(frog);
+
             lastTimeStamp = 0;
             let deltaTime = 0
             
             function refreshScreen(timeStamp) {
-                
                 deltaTime = timeStamp - lastTimeStamp;
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                
                 lastTimeStamp = timeStamp;
-                
+                context.clearRect(0, 0, canvas.width, canvas.height);
 
                 for(let i = 0; i < objectStorage.length; i++) {
                     objectStorage[i].update(deltaTime);
-                    objectStorage[i].draw();
-                    
-                    
+                    objectStorage[i].draw();   
                 }
-                
-                window.requestAnimationFrame(refreshScreen);
+                window.requestAnimationFrame(refreshScreen);       
             }
-            
-            
             const froggerSheet = new Image();
             froggerSheet.onload = () => {
                 window.requestAnimationFrame(refreshScreen);
@@ -722,11 +782,13 @@
             
             window.addEventListener('keydown', function(event){
                 switch(event.keyCode) {
+                    
                     case 37:
                         frog.moveLeft();
                         break;
                     case 38:
                         frog.moveUp();
+                        
                         break;
                     case 39:
                         frog.moveRight();
