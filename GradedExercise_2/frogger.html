@@ -206,6 +206,7 @@
                     this.frameRate = 5;
                     this.movementDirection = "Up";
                     this.lifeCount = 3;
+                    this.reset = false;
                 }
                 moveUp() {
                     if(this.y > 100) {            
@@ -268,8 +269,7 @@
                     if (this.x < -22 || this.x > canvas.width - 22) {
                         RemoveLife();
                     }
-                } 
-                   
+                }                
             }
             
             class Car_1 extends GameObject {            
@@ -497,18 +497,108 @@
                 draw() {
                     context.beginPath();
                     context.rect(this.x, this.y, this.width, this.height);
-                    context.fillStyle = 'Yellow';
+                    context.fillStyle = '#1313ef';
                     context.fill();
+                    if(this.collision == true && this.hitching == false){
+                        this.hitching = true;
+                        frog.x = 336;
+                        frog.y = 655 - 48;
+                        frog.movementDirection = "Up";
+                        
+                    }
+
+                    if(this.collision == true && this.hitching == true){
+                        frog.y = frog.y + 48;
+                    }
+                    if(frog.reset == true){
+                        this.hitching = false;
+                        
+                    }
                 }
             }
             class Green_bottom extends GameObject {
                 draw() {
                     context.drawImage(froggerSheet, 1285, 622, 26, 24,
                     this.x, this.y, this.width, this.height);
+                    if(this.collision == true){
+                        RemoveLife();
+                    }
                 }
             }
+            class Green_left_corner extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 1284, 717, 24, 24,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Green_left_wall extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 1285, 670, 25, 26,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Green_right_corner extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 1191, 716, 22, 22,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Green_right_wall extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 1193, 670, 22, 24,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Green_right_inner_corner extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 1189, 622, 26, 26,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Green_left_inner_corner extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 1235, 622, 28, 26,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Green_top_water extends GameObject {
+                draw() {
+                    context.drawImage(froggerSheet, 1285, 622, 26, 22,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Green_filler extends Scenery {
+                draw() {
+                    context.drawImage(froggerSheet, 1233, 666, 35, 45,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Green_top_filler extends Scenery {
+                draw() {
+                    context.drawImage(froggerSheet, 134, 624, 26, 22,
+                    this.x, this.y, this.width, this.height);
+                }
+            } 
+            class Green_top_filler_2 extends Scenery {
+                draw() {
+                    context.drawImage(froggerSheet, 136, 673, 26, 22,
+                    this.x, this.y, this.width, this.height);
+                }
+            }
+            class Box extends Scenery {
+                draw() {
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.width, this.height)
+                    context.lineWidth = 2;
+                    context.strokeStyle = "White"; 
+                    context.stroke();
+
+                }
+                
+            }
+
             const objectStorage = [];
-            const water = new Water(0, 80, canvas.width, 283, 0, 0);
+            const water = new Water(0, 50, canvas.width, 315, 0, 0);
             objectStorage.push(water);
             
             const dieWater_start_1 = new DieWaterStart(0, 340, 600, 5, -81, 0);
@@ -577,22 +667,18 @@
             const hugeLog_2 = new HugeLog(-586, 218, 185, 47, 120, 0);
             const hugeLog_3 = new HugeLog(-986, 218, 185, 47, 120, 0);
 
-            const goal_1 = new Goal(30, 60, 50, 50, 0, 0);
-            const goal_2 = new Goal(164, 60, 50, 50, 0, 0);
-            const goal_3 = new Goal(302, 60, 50, 50, 0, 0);
-            const goal_4 = new Goal(440, 60, 50, 50, 0, 0);
-            const goal_5 = new Goal(canvas.width - 90, 60, 50, 50, 0, 0);
+            const goal_1 = new Goal(35, 60, 40, 40, 0, 0);
+            const goal_2 = new Goal(173, 60, 40, 40, 0, 0);
+            const goal_3 = new Goal(311, 60, 40, 40, 0, 0);
+            const goal_4 = new Goal(449, 60, 40, 40, 0, 0);
+            const goal_5 = new Goal(canvas.width - 85, 60, 40, 40, 0, 0);
         
-            let counter_bottom = 0;
-            let counter_mid_black = 0;
-            let counter_mid_blue = 0;
+            let purple_thing_counter = 0;
             for(let i = 0; i < 15; i++) {
-                objectStorage.push(new PurpleThing(626 - counter_bottom, 648, 46, 50, 0, 0));
-                objectStorage.push(new PurpleThing(626 - counter_mid_black, 361, 46, 50, 0, 0));
-                objectStorage.push(new PurpleThing_Blue(626 - counter_mid_blue, 361, 46, 30, 0, 0));
-                counter_bottom = counter_bottom + 46;
-                counter_mid_black = counter_mid_black + 46;
-                counter_mid_blue = counter_mid_blue + 46;
+                objectStorage.push(new PurpleThing(626 - purple_thing_counter, 648, 46, 50, 0, 0));
+                objectStorage.push(new PurpleThing(626 - purple_thing_counter, 361, 46, 50, 0, 0));
+                objectStorage.push(new PurpleThing_Blue(626 - purple_thing_counter, 361, 46, 30, 0, 0));
+                purple_thing_counter = purple_thing_counter + 46;
             }
 
             let life_1 = new Life(7, canvas.height - 45, 18, 18, 0, 0);
@@ -600,25 +686,27 @@
             let life_3 = new Life(7 + 44, canvas.height - 45, 18, 18, 0, 0);
            
             function RemoveLife() {
+                frog.lifeCount --;
                 frog.x = 336;
                 frog.y = 655;
                 frog.movementDirection = "Up";
-                frog.lifeCount--;
+
                 if(frog.lifeCount == 2){
                     objectStorage.pop();
                     objectStorage.pop();
-                    lord_of_time.x = time_block.x - time_block.width;
-                    
+                    lord_of_time.x = time_block.x - time_block.width;                   
                 }
                 if(frog.lifeCount == 1){
                     objectStorage.pop();
                     objectStorage.pop();
                     lord_of_time.x = time_block.x - time_block.width;
+                    
                 }
                 if(frog.lifeCount == 0){
                     objectStorage.pop();
                     objectStorage.pop();
                     lord_of_time.x = time_block.x - time_block.width;
+                    
                 }
                 if(frog.lifeCount < 0){
                     objectStorage.pop();
@@ -650,51 +738,52 @@
                 counter_bottom_greenery = counter_bottom_greenery + 96;
                 }
             }
+            
+            let seperator = 0;
+            let left_wall_top = 25;
+            let right_wall_top = 22;
+            for(let i = 0; i < 5; i++) {
+                objectStorage.push(new Green_left_corner(2 + seperator, 91, 24, 24, 0, 0));
+                objectStorage.push(new Green_left_wall(2 + seperator, 64, 25, 28, 0, 0));
+                objectStorage.push(new Green_left_wall(2 + seperator, 64 - left_wall_top, 25, 28, 0, 0));
 
-            //Drippel turtle
-            let triple_turtle = 0;
-            for(let i = 0; i < 3; i++) {
-                objectStorage.push(new Turtle(620 + triple_turtle, 316, 46, 45, -81, 0));
-                triple_turtle = triple_turtle + 44;
-            }
-            let triple_turtle_2 = 0;
-            for(let i = 0; i < 3; i++) {
-                objectStorage.push(new Turtle(851 + triple_turtle_2, 316, 46, 45, -81, 0));
-                triple_turtle_2 = triple_turtle_2 + 44;
-            }
-            let triple_turtle_3 = 0;
-            for(let i = 0; i < 3; i++) {
-                objectStorage.push(new Turtle(1082 + triple_turtle_3, 316, 46, 45, -81, 0));
-                triple_turtle_3 = triple_turtle_3 + 44;
-            }
-            let triple_turtle_4 = 0;
-            for(let i = 0; i < 3; i++) {
-                objectStorage.push(new Turtle(1313 + triple_turtle_4, 316, 46, 45, -81, 0));
-                triple_turtle_4 = triple_turtle_4 + 44;
-            }
+                objectStorage.push(new Green_right_corner(83 + seperator, 91, 22, 22, 0, 0));
+                objectStorage.push(new Green_right_wall(85 + seperator, 69, 22, 24, 0, 0));
+                objectStorage.push(new Green_right_wall(85 + seperator, 69 - right_wall_top, 22, 24, 0, 0));
+                objectStorage.push(new Green_right_inner_corner(78 + seperator, 40, 22, 22, 0, 0));
+                objectStorage.push(new Green_left_inner_corner(3 + seperator, 40, 25, 22, 0, 0));
+                objectStorage.push(new Green_top_water(28 + seperator, 35, 25, 22, 0, 0));
+                objectStorage.push(new Green_top_water(53 + seperator, 35, 25, 22, 0, 0));
 
-            //Dubbel turtle
-            let dual_turtle = 0;
-            for(let i = 0; i < 2; i++) {
-                objectStorage.push(new Turtle_2(620 - dual_turtle, 172, 46, 43, -81, 0));
-                dual_turtle = dual_turtle + 44;
-            }
-            let dual_turtle_2 = 0;
-            for(let i = 0; i < 2; i++) {
-                objectStorage.push(new Turtle_2(855 - dual_turtle_2, 172, 46, 43, -81, 0));
-                dual_turtle_2 = dual_turtle_2 + 44;
-            }
-            let dual_turtle_3 = 0;
-            for(let i = 0; i < 2; i++) {
-                objectStorage.push(new Turtle_2(1090 - dual_turtle_3, 172, 46, 43, -81, 0));
-                dual_turtle_3 = dual_turtle_3 + 44;
-            }
-            let dual_turtle_4 = 0;
-            for(let i = 0; i < 2; i++) {
-                objectStorage.push(new Turtle_2(1325 - dual_turtle_4, 172, 46, 43, -81, 0));
-                dual_turtle_4 = dual_turtle_4 + 44; 
-            }
+                objectStorage.push(new Green_filler(-32 + seperator, 45, 36, 46, 0, 0));
 
+                seperator = seperator + 138;
+            }
+            let top_filler_counter = 0;
+            for(let i = 0; i < 26; i++) {
+                objectStorage.push(new Green_top_filler(0 + top_filler_counter, 30, 26, 22, 0, 0));
+                objectStorage.push(new Green_top_filler_2(26 + top_filler_counter, 30, 26, 22, 0, 0));
+                
+                top_filler_counter = top_filler_counter + 52;
+            }
+            objectStorage.push(new Green_filler(canvas.width - 15, 45, 36, 46, 0, 0));
+            
+            let turtleTrain = 0;
+            for(let i = 0; i < 3; i++) {
+                objectStorage.push(new Turtle(620 + turtleTrain, 316, 46, 45, -81, 0));
+                objectStorage.push(new Turtle(851 + turtleTrain, 316, 46, 45, -81, 0));
+                objectStorage.push(new Turtle(1082 + turtleTrain, 316, 46, 45, -81, 0));
+                objectStorage.push(new Turtle(1313 + turtleTrain, 316, 46, 45, -81, 0));
+                turtleTrain = turtleTrain + 44;
+
+                if(i < 2) {
+                    objectStorage.push(new Turtle_2(620 - turtleTrain, 172, 46, 43, -81, 0));
+                    objectStorage.push(new Turtle_2(855 - turtleTrain, 172, 46, 43, -81, 0));
+                    objectStorage.push(new Turtle_2(1090 - turtleTrain, 172, 46, 43, -81, 0));
+                    objectStorage.push(new Turtle_2(1325 - turtleTrain, 172, 46, 43, -81, 0));  
+                }
+            }
+           
             let t_1 = new Time(canvas.width - 200, canvas.height - 35, 26, 5, 0, 0);
             let t_2 = new Time(t_1.x + t_1.width / 2 - 2.5, canvas.height - 30, 5, 20, 0, 0);
             let i_1 = new Time(t_1.x + t_1.width + 5, t_1.y, 5, 5, 0, 0);
@@ -759,7 +848,18 @@
             objectStorage.push(life_3);
             
             objectStorage.push(frog);
+            
+            gameOverStorage = [];
 
+            function GameOver() {
+                let yesBox = new Box(200, 300, 100, 50)
+                let noBox = new Box(370, 300, 100, 50)
+                gameOverStorage.push(yesBox);
+                gameOverStorage.push(noBox);
+                for(let i = 0; i < gameOverStorage.length; i++) {
+                    gameOverStorage[i].draw();   
+                }
+            }
             lastTimeStamp = 0;
             let deltaTime = 0
             
@@ -767,11 +867,16 @@
                 deltaTime = timeStamp - lastTimeStamp;
                 lastTimeStamp = timeStamp;
                 context.clearRect(0, 0, canvas.width, canvas.height);
-
+                
+                if(frog.lifeCount > 0){
                 for(let i = 0; i < objectStorage.length; i++) {
                     objectStorage[i].update(deltaTime);
                     objectStorage[i].draw();   
                 }
+            }
+            else{ 
+                GameOver();
+            }
                 window.requestAnimationFrame(refreshScreen);       
             }
             const froggerSheet = new Image();
