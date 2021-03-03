@@ -3,7 +3,13 @@
     <head>
         <style>
             body { margin: 0;  };
-           
+            @font-face { font-family: ArcadeClassic; src: url('Arcade Classic V2.otf') format('otf')
+                                                        url('Arcade Classic V2.ttf') format('truetype')
+                                                        url('Arcade Classic V2.woff') format('woff')
+                                                        url('Arcade Classic V2.eot') format('eot')
+                                                        ;
+                                                         } 
+                                                        
         </style>
     </head>
     <body>
@@ -39,7 +45,6 @@
                             && (this.y < (frog.y + frog.height))) {
                                 console.log('collision', this.collision);
                                 this.collision = true;
-                                
                             }
                             else {
                             this.collision = false;
@@ -136,7 +141,7 @@
                     context.fillStyle = "#1313ef";
                     context.fill();
                     if(this.x < -137 ) {
-                        this.x = 768 + 38;
+                        this.x = 768 + 40;
                     }   
                     if(this.collision == true && frog.speedX == 0) {
                         RemoveLife();
@@ -489,7 +494,6 @@
                                 this.collision = false; 
                             
                             }
-                        
                     }             
                 }
             }
@@ -500,10 +504,13 @@
                     context.fillStyle = '#1313ef';
                     context.fill();
                     if(this.collision == true && this.hitching == false){
+                        roundScore = roundScore + canvas.width - lord_of_time.x;
+                        
                         this.hitching = true;
                         frog.x = 336;
                         frog.y = 655 - 48;
                         frog.movementDirection = "Up";
+                        score();
                         
                     }
 
@@ -511,8 +518,7 @@
                         frog.y = frog.y + 48;
                     }
                     if(frog.reset == true){
-                        this.hitching = false;
-                        
+                        this.hitching = false; 
                     }
                 }
             }
@@ -590,9 +596,8 @@
                     context.beginPath();
                     context.rect(this.x, this.y, this.width, this.height)
                     context.lineWidth = 2;
-                    context.strokeStyle = "White"; 
+                    context.strokeStyle = "red"; 
                     context.stroke();
-
                 }
                 
             }
@@ -604,7 +609,7 @@
             const dieWater_start_1 = new DieWaterStart(0, 340, 600, 5, -81, 0);
             const dieWater_start_2 = new DieWaterStart(120, 290, 600, 5, 90, 0);
             const dieWater_start_3 = new DieWaterStart(25, 240, 600, 5, 120, 0);
-            const dieWater_start_4 = new DieWaterStart(0, 190, 560, 5, -81, 0);
+            const dieWater_start_4 = new DieWaterStart(-50, 190, 560, 5, -81, 0);
     
             objectStorage.push(dieWater_start_1);
             objectStorage.push(dieWater_start_2);
@@ -612,31 +617,25 @@
             objectStorage.push(dieWater_start_4);
             
             let die_row_1 = 0;
+            let die_row_2 = 0;
+            let die_row_4 = 0;
+            let die_row_5 = 0;
             for(let i = 0; i < 4; i++){
                 objectStorage.push(new DieWaterLeft(768 + die_row_1, 340, 67, 5, -81, 0));
                 die_row_1 = die_row_1 + 228;
-            }
-            let die_row_2 = 0;
-            for(let i = 0; i < 4; i++) {
                 objectStorage.push(new DieWaterRight(-145 + die_row_2, 290, 115, 5, 90, 0));
                 die_row_2 = die_row_2 - 272;
+                objectStorage.push(new DieWaterLeft_2(640 + die_row_4, 190, 105, 5, -81, 0));
+                die_row_4 = die_row_4 + 236;
+                objectStorage.push(new DieWaterRight_3(110 + die_row_5, 145, 60, 5, 120, 0));
+                die_row_5 = die_row_5 - 251;
             }
             let die_row_3 = 0;
             for(let i = 0; i < 3; i++) {
                 objectStorage.push(new DieWaterRight_2(-375 + die_row_3, 240, 160, 5, 120, 0));
                 die_row_3 = die_row_3 - 395;
             }
-            let die_row_4 = 0;
-            for(let i = 0; i < 4; i++){
-                objectStorage.push(new DieWaterLeft_2(685 + die_row_4, 190, 105, 5, -81, 0));
-                die_row_4 = die_row_4 + 236;
-            }
-            let die_row_5 = 0;
-            for(let i = 0; i < 4; i++) {
-                objectStorage.push(new DieWaterRight_3(110 + die_row_5, 145, 60, 5, 120, 0));
-                die_row_5 = die_row_5 - 251;
-            }
-
+            
             const frog = new Frog(336, 655, 38, 38, 0, 0);
 
             const car_1 = new Car_1(670, 604, 48, 40, -45, 0);
@@ -707,6 +706,7 @@
                     objectStorage.pop();
                     lord_of_time.x = time_block.x - time_block.width;
                     
+                    
                 }
                 if(frog.lifeCount < 0){
                     objectStorage.pop();
@@ -717,6 +717,7 @@
                     objectStorage.push(life_2);
                     objectStorage.push(life_3);
                     frog.lifeCount = 3;
+                    roundScore = 0;
                     
                 }
                 objectStorage.push(frog);
@@ -849,24 +850,77 @@
             
             objectStorage.push(frog);
             
-            gameOverStorage = [];
+            let roundScore = 0;
+            let highScore = 0;
+            function score() {
+                if (roundScore > highScore) {
+                    highScore = roundScore;
+                }
+                context.clearRect(0, 0, canvas.width, 35);
 
+                roundScore = Math.round(roundScore);
+                highScore = Math.round(highScore);
+                context.font = "24px ArcadeClassic"  ;
+                context.fillStyle = "red";
+                context.fillText("Score      " + roundScore, 5, 20);
+                context.fillText("Highscore      " + highScore, 300, 20);
+            }
+            score();
+
+            function stopPlaying() {
+                window.location = "https://saneprkl.github.io/Gradedexercise1/";
+            };
+            function newGame(){
+                window.location = "https://saneprkl.github.io/Gradedexercise1/GradedExercise_2/frogger.html";
+            }
+
+            gameOverStorage = [];
+            
             function GameOver() {
-                let yesBox = new Box(200, 300, 100, 50)
-                let noBox = new Box(370, 300, 100, 50)
+                context.clearRect(0, 0, canvas.width, 35);
+                let yesBox = new Box(200, 400, 100, 50)
+                let noBox = new Box(370, 400, 100, 50)
+
+                context.font = "30px ArcadeClassic";
+                context.fillStyle = "red";
+                context.fillText("Your   round   score   was     "+ roundScore, yesBox.x - 50, yesBox.y - 100);
+                context.fillText("Your   high   score   is     "+ highScore, yesBox.x - 50, yesBox.y - 150);
+                context.fillText("Do   you   wish   to   play   again?", yesBox.x - 50, yesBox.y - 50);
+                context.fillText("Yes", yesBox.x + 22, yesBox.y + 35);
+                context.fillText("No", noBox.x + 30, noBox.y + 35);
+
+                elementLeft = canvas.offsetLeft + canvas.clientLeft,
+                elementTop = canvas.offsetTop + canvas.clientTop;
+
+                canvas.addEventListener('click', function(event) {
+                let x = event.pageX - elementLeft;
+                let y = event.pageY - elementTop;
+
+                gameOverStorage.forEach(function(element) {
+                    if (y > element.y && y < element.y + element.height 
+                        && x > element.x && x < element.x + element.width) {
+                            if(x > canvas.width / 2) {
+                                stopPlaying();
+                            } else {
+                                newGame();
+                            }
+                        }
+                    });
+                }, false);
+
                 gameOverStorage.push(yesBox);
                 gameOverStorage.push(noBox);
-                for(let i = 0; i < gameOverStorage.length; i++) {
-                    gameOverStorage[i].draw();   
-                }
-            }
+                yesBox.draw();
+                noBox.draw();
+        }
             lastTimeStamp = 0;
             let deltaTime = 0
             
             function refreshScreen(timeStamp) {
                 deltaTime = timeStamp - lastTimeStamp;
                 lastTimeStamp = timeStamp;
-                context.clearRect(0, 0, canvas.width, canvas.height);
+                
+                context.clearRect(0, 30, canvas.width, canvas.height);
                 
                 if(frog.lifeCount > 0){
                 for(let i = 0; i < objectStorage.length; i++) {
