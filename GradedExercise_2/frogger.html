@@ -30,8 +30,7 @@
                     this.collision = false;
                     this.hitching = false;
                     this.isCar = false;
-                    this.reset = false;  
-                        
+                    this.reset = false; 
                 }
 
                 update(deltaTime) {
@@ -128,7 +127,7 @@
                 draw(){
                     context.beginPath();
                     context.rect(this.x, this.y, this.width, this.height);
-                    context.fillStyle = "#1313ef";
+                    context.fillStyle = "red";
                     context.fill();
                     if(this.x < -70 ) {
                         this.x = 768 + 76;
@@ -142,10 +141,10 @@
                 draw(){
                     context.beginPath();
                     context.rect(this.x, this.y, this.width, this.height);
-                    context.fillStyle = "#1313ef";
+                    context.fillStyle = "red";
                     context.fill();
                     if(this.x < -137 ) {
-                        this.x = 768 + 40;
+                        this.x = 768 + 41;
                     }   
                     if(this.collision == true && frog.speedX == 0) {
                         RemoveLife();
@@ -284,8 +283,6 @@
                 }                
             }
 
-            
-            
             class Car_1 extends GameObject {            
                 draw() {
                     this.isCar = true;
@@ -430,13 +427,28 @@
                 }
             }   
             class Turtle extends GameObject {
+                constructor(startX, startY, width, height, speedX, speedY){
+                    super(startX, startY, width, height, speedX, speedY);
+                    this.frameCounter = 0;
+                    this.animationFrames = 3;
+                    this.frameTimeCounter = 0;
+                    this.frameRate = 5;
+                }
                 draw() {
-                    context.drawImage(froggerSheet, 1287, 436, 46, 41,
+                    context.drawImage(froggerSheet, 1287 + this.frameCounter * 68 + 3  * this.frameCounter, 436, 46, 41,
                     this.x, this.y, this.width, this.height);
+
+                    if(deltaTime > 4 && deltaTime < 9) {
+                        this.x = this.x -81/144;    
+                    }
+                    if(deltaTime > 9) {
+                        this.x = this.x + this.speedX / 60;
+                    }
 
                     if(this.x <-195){ 
                         this.x = canvas.width + this.width;
                     }
+                    
                     if(this != frog) {
                         if(((this.x + this.width) > frog.x)
                             && (this.x < (frog.x + frog.width))
@@ -466,12 +478,35 @@
                             }
                     }
                 }
+                update(deltaTime) {
+                    this.frameTimeCounter += deltaTime;
+                    this.speedX = -81;
+                    if(this.frameTimeCounter > 1000 / this.frameRate) {
+                        this.frameTimeCounter = 0;
+                        this.frameCounter++;
+                        if(this.frameCounter >= this.animationFrames) {
+                            this.frameCounter = 0;
+                        }             
+                    }           
+                }
             }
             class Turtle_2 extends GameObject {
+                constructor(startX, startY, width, height, speedX, speedY){
+                    super(startX, startY, width, height, speedX, speedY);
+                    this.frameCounter = 0;
+                    this.animationFrames = 3;
+                    this.frameTimeCounter = 0;
+                    this.frameRate = 5;
+                }
                 draw() {
-                    context.drawImage(froggerSheet, 1287, 436, 46, 41,
+                    context.drawImage(froggerSheet, 1287 + this.frameCounter * 68 + 3  * this.frameCounter, 436, 46, 41,
                     this.x, this.y, this.width, this.height);
-
+                    if(deltaTime > 4 && deltaTime < 9) {
+                        this.x = this.x -81/144;    
+                    }
+                    if(deltaTime > 9) {
+                        this.x = this.x + this.speedX / 60;
+                    }
                     if(this.x <-195){ 
                         this.x = canvas.width + 78;
                     }
@@ -504,6 +539,17 @@
                             
                             }
                     }             
+                }
+                update(deltaTime) {
+                    
+                    this.frameTimeCounter += deltaTime;
+                    if(this.frameTimeCounter > 1000 / this.frameRate) {
+                        this.frameTimeCounter = 0;
+                        this.frameCounter++;
+                        if(this.frameCounter >= this.animationFrames) {
+                            this.frameCounter = 0;
+                        }             
+                    }           
                 }
             }
             let goalCount = 0;
@@ -641,7 +687,7 @@
             let die_row_4 = 0;
             let die_row_5 = 0;
             for(let i = 0; i < 4; i++){
-                objectStorage.push(new DieWaterLeft(768 + die_row_1, 340, 67, 5, -81, 0));
+                objectStorage.push(new DieWaterLeft(785 + die_row_1, 340, 45, 5, -81, 0));
                 die_row_1 = die_row_1 + 228;
                 objectStorage.push(new DieWaterRight(-145 + die_row_2, 290, 115, 5, 90, 0));
                 die_row_2 = die_row_2 - 272;
@@ -706,31 +752,24 @@
            
             function RemoveLife() {
                 frog.lifeCount --;
-                
                 frog.x = 336;
                 frog.y = 655;
                 frog.movementDirection = "Up";
-                
 
                 if(frog.lifeCount == 2){
-                    
                     objectStorage.pop();
                     objectStorage.pop();
                     lord_of_time.x = time_block.x - time_block.width;                   
                 }
                 if(frog.lifeCount == 1){
-                    
                     objectStorage.pop();
                     objectStorage.pop();
                     lord_of_time.x = time_block.x - time_block.width;
-                    
                 }
                 if(frog.lifeCount == 0){
                     objectStorage.pop();
                     objectStorage.pop();
                     lord_of_time.x = time_block.x - time_block.width;
-                    
-                    
                 }
                 if(frog.lifeCount < 0){
                     objectStorage.pop();
@@ -741,8 +780,7 @@
                     objectStorage.push(life_2);
                     objectStorage.push(life_3);
                     frog.lifeCount = 3;
-                    roundScore = 0;
-                    
+                    roundScore = 0;   
                 }
                 objectStorage.push(frog);
             }
@@ -751,8 +789,6 @@
             goals.push(goal_3);
             goals.push(goal_4);
             goals.push(goal_5);
-
-
 
             let counter_bottom_greenery = 0;
             for(let i = 0; i < 6; i++) {
@@ -790,7 +826,6 @@
             for(let i = 0; i < 26; i++) {
                 objectStorage.push(new Green_top_filler(0 + top_filler_counter, 30, 26, 22, 0, 0));
                 objectStorage.push(new Green_top_filler_2(26 + top_filler_counter, 30, 26, 22, 0, 0));
-                
                 top_filler_counter = top_filler_counter + 52;
             }
             objectStorage.push(new Green_filler(canvas.width - 15, 45, 36, 46, 0, 0));
@@ -825,7 +860,7 @@
             let e_4 = new Time(m_4.x + 10, m_4.y + 20, 18, 5, 0, 0);
 
             let time_block = new TimeBlock(97, t_1.y, 375, 25, 0, 0);
-            let lord_of_time = new Lord_of_time(time_block.x - time_block.width, time_block.y - 1, time_block.width+1, 27, 7, 0);
+            let lord_of_time = new Lord_of_time(time_block.x - time_block.width, time_block.y - 1, time_block.width+1, 27, 8, 0);
             
             objectStorage.push(t_1);
             objectStorage.push(t_2);
@@ -895,21 +930,6 @@
                 context.fillText("Highscore      " + highScore, 300, 20);
             }
             score();
-
-            function stopPlaying() {
-                window.location = "https://saneprkl.github.io/Gradedexercise1/";
-            };
-            function newGame(){
-                
-                window.location = "https://saneprkl.github.io/Gradedexercise1/GradedExercise_2/frogger.html"
-                
-                /*
-                for(let i=0; i < objectStorage.length; i++) {
-                    objectStorage[i].reset = true;
-                }*/
-                
-            }
-
             gameOverStorage = [];
             
             function GameOver() {
@@ -926,7 +946,7 @@
                 context.fillText("No", noBox.x + 30, noBox.y + 35);
                 
                 if(goalCount == 5){
-                    context.fillText("Congratulations     you     have     won", yesBox.x - 100, yesBox.y - 200);
+                    context.fillText("Congratulations     you     have     won", yesBox.x - 90, yesBox.y - 200);
 
                 }
                 elementLeft = canvas.offsetLeft + canvas.clientLeft,
@@ -940,9 +960,9 @@
                     if (y > element.y && y < element.y + element.height 
                         && x > element.x && x < element.x + element.width) {
                             if(x > canvas.width / 2) {
-                                stopPlaying();
+                                window.location = "https://saneprkl.github.io/Gradedexercise1/";
                             } else {
-                                newGame();
+                                window.location = "https://saneprkl.github.io/Gradedexercise1/GradedExercise_2/frogger.html";
                             }
                         }
                     });
@@ -971,16 +991,11 @@
                 }
                 for(let i = 0; i < goals.length; i++) {
                     goals[i].update(deltaTime);
-                    goals[i].draw();
-                    
-                    
-                       
+                    goals[i].draw();     
                 }
             }
             else{ 
-                
                 GameOver();
-                
             }
             window.requestAnimationFrame(refreshScreen);     
             }
