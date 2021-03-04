@@ -3,13 +3,11 @@
     <head>
         <style>
             body { margin: 0;  };
-            @font-face { font-family: ArcadeClassic; src: url('Arcade Classic V2.otf') format('otf')
-                                                        url('Arcade Classic V2.ttf') format('truetype')
-                                                        url('Arcade Classic V2.woff') format('woff')
-                                                        url('Arcade Classic V2.eot') format('eot')
-                                                        ;
-                                                         } 
-                                                        
+            @font-face { font-family: ArcadeClassic; src: url('ArcadeClassicV2.otf') format('otf')
+                                                        url('ArcadeClassicV2.ttf') format('truetype')
+                                                        url('ArcadeClassicV2.woff') format('woff')
+                                                        url('ArcadeClassicV2.eot') format('eot')
+                                                        ; }             
         </style>
     </head>
     <body>
@@ -31,13 +29,19 @@
                     this.speedY = speedY;  
                     this.collision = false;
                     this.hitching = false;
-                    this.isCar = false;        
+                    this.isCar = false;
+                    this.reset = false;  
+                        
                 }
 
                 update(deltaTime) {
                     this.y = this.y + this.speedY * deltaTime / 1000;
                     this.x = this.x + this.speedX * deltaTime / 1000; 
-                      
+                      if(this.reset == true) {
+                          this.x = this.x
+                          this.y = this.y
+                          this.reset = false;
+                      }
                     if(this != frog) {
                         if(((this.x + this.width) > frog.x)
                             && (this.x < (frog.x + frog.width))
@@ -247,8 +251,10 @@
                         }             
                     }           
                 }
+                
                 draw() {
                     let animationStartX = 0;
+                    
                     switch(this.movementDirection) {
                         case "Up":
                         animationStartX = 4;
@@ -267,6 +273,7 @@
                         animationStartX = 161;
                         break;
                     }
+                    
                     context.drawImage(froggerSheet,
                         animationStartX + this.frameCounter * 35 + 3 * this.frameCounter , 25, 35, 43,
                         this.x, this.y, this.width, this.height);
@@ -276,6 +283,8 @@
                     }
                 }                
             }
+
+            
             
             class Car_1 extends GameObject {            
                 draw() {
@@ -497,6 +506,7 @@
                     }             
                 }
             }
+            let goalCount = 0;
             class Goal extends GameObject {
                 draw() {
                     context.beginPath();
@@ -511,14 +521,22 @@
                         frog.y = 655 - 48;
                         frog.movementDirection = "Up";
                         score();
+                        goalCount++;
                         
                     }
-
+                    if(this.hitching == true) {
+                        context.drawImage(froggerSheet, 1452, 525, 52, 52,
+                        this.x - 7, this.y, 52, 52 );
+                    }
                     if(this.collision == true && this.hitching == true){
                         frog.y = frog.y + 48;
+                        
                     }
                     if(frog.reset == true){
                         this.hitching = false; 
+                    }
+                    if(goalCount == 1) {
+                        frog.lifeCount = 0;
                     }
                 }
             }
@@ -603,6 +621,7 @@
             }
 
             const objectStorage = [];
+            const goals = [];
             const water = new Water(0, 50, canvas.width, 315, 0, 0);
             objectStorage.push(water);
             
@@ -686,16 +705,20 @@
            
             function RemoveLife() {
                 frog.lifeCount --;
+                
                 frog.x = 336;
                 frog.y = 655;
                 frog.movementDirection = "Up";
+                
 
                 if(frog.lifeCount == 2){
+                    
                     objectStorage.pop();
                     objectStorage.pop();
                     lord_of_time.x = time_block.x - time_block.width;                   
                 }
                 if(frog.lifeCount == 1){
+                    
                     objectStorage.pop();
                     objectStorage.pop();
                     lord_of_time.x = time_block.x - time_block.width;
@@ -722,11 +745,13 @@
                 }
                 objectStorage.push(frog);
             }
-            objectStorage.push(goal_1);
-            objectStorage.push(goal_2);
-            objectStorage.push(goal_3);
-            objectStorage.push(goal_4);
-            objectStorage.push(goal_5);
+            goals.push(goal_1);
+            goals.push(goal_2);
+            goals.push(goal_3);
+            goals.push(goal_4);
+            goals.push(goal_5);
+
+
 
             let counter_bottom_greenery = 0;
             for(let i = 0; i < 6; i++) {
@@ -852,6 +877,8 @@
             
             let roundScore = 0;
             let highScore = 0;
+            highScore = localStorage.getItem("highScore");
+            
             function score() {
                 if (roundScore > highScore) {
                     highScore = roundScore;
@@ -860,6 +887,7 @@
 
                 roundScore = Math.round(roundScore);
                 highScore = Math.round(highScore);
+                localStorage.setItem("highScore", highScore);
                 context.font = "24px ArcadeClassic"  ;
                 context.fillStyle = "red";
                 context.fillText("Score      " + roundScore, 5, 20);
@@ -871,7 +899,14 @@
                 window.location = "https://saneprkl.github.io/Gradedexercise1/";
             };
             function newGame(){
-                window.location = "https://saneprkl.github.io/Gradedexercise1/GradedExercise_2/frogger.html";
+                
+                window.location = "https://saneprkl.github.io/Gradedexercise1/GradedExercise_2/frogger.html"
+                
+                /*
+                for(let i=0; i < objectStorage.length; i++) {
+                    objectStorage[i].reset = true;
+                }*/
+                
             }
 
             gameOverStorage = [];
@@ -888,7 +923,11 @@
                 context.fillText("Do   you   wish   to   play   again?", yesBox.x - 50, yesBox.y - 50);
                 context.fillText("Yes", yesBox.x + 22, yesBox.y + 35);
                 context.fillText("No", noBox.x + 30, noBox.y + 35);
+                
+                if(goalCount == 1){
+                    context.fillText("Congratulations     you     have     won!!", yesBox.x - 100, yesBox.y - 200);
 
+                }
                 elementLeft = canvas.offsetLeft + canvas.clientLeft,
                 elementTop = canvas.offsetTop + canvas.clientTop;
 
@@ -925,14 +964,26 @@
                 if(frog.lifeCount > 0){
                 for(let i = 0; i < objectStorage.length; i++) {
                     objectStorage[i].update(deltaTime);
-                    objectStorage[i].draw();   
+                    
+                    objectStorage[i].draw();
+                       
+                }
+                for(let i = 0; i < goals.length; i++) {
+                    goals[i].update(deltaTime);
+                    goals[i].draw();
+                    
+                    
+                       
                 }
             }
             else{ 
+                
                 GameOver();
+                
             }
-                window.requestAnimationFrame(refreshScreen);       
+            window.requestAnimationFrame(refreshScreen);     
             }
+            
             const froggerSheet = new Image();
             froggerSheet.onload = () => {
                 window.requestAnimationFrame(refreshScreen);
