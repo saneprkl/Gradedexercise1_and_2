@@ -520,6 +520,7 @@
                         frog.x = 336;
                         frog.y = 655 - 48;
                         frog.movementDirection = "Up";
+
                         score();
                         goalCount++;
                         
@@ -535,7 +536,7 @@
                     if(frog.reset == true){
                         this.hitching = false; 
                     }
-                    if(goalCount == 1) {
+                    if(goalCount == 5) {
                         frog.lifeCount = 0;
                     }
                 }
@@ -924,8 +925,8 @@
                 context.fillText("Yes", yesBox.x + 22, yesBox.y + 35);
                 context.fillText("No", noBox.x + 30, noBox.y + 35);
                 
-                if(goalCount == 1){
-                    context.fillText("Congratulations     you     have     won!!", yesBox.x - 100, yesBox.y - 200);
+                if(goalCount == 5){
+                    context.fillText("Congratulations     you     have     won", yesBox.x - 100, yesBox.y - 200);
 
                 }
                 elementLeft = canvas.offsetLeft + canvas.clientLeft,
