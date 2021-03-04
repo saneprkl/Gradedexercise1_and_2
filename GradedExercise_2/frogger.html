@@ -215,18 +215,25 @@
                     this.movementDirection = "Up";
                     this.lifeCount = 3;
                     this.reset = false;
+                    this.jumpCounter = 0; 
                 }
                 moveUp() {
                     if(this.y > 100) {            
                     this.y = this.y - 48;              
-                    this.movementDirection = "Up";             
+                    this.movementDirection = "Up"; 
+                    this.jumpCounter++;
+                    if(this.jumpCounter > 0){
+                        roundScore = roundScore + 20;
+                        score();
+                    }            
                     }
                 }
                 moveDown() {
                     if(this.y < canvas.height - 100) {
                     this.y = this.y + 48;
-                    this.movementDirection = "Down";              
-                    }
+                    this.movementDirection = "Down";
+                    this.jumpCounter = this.jumpCounter - 2;
+                }
                 }
                 moveLeft() {
                     if(this.x > 15) {
@@ -342,12 +349,7 @@
                             (this.x + this.width - 10) < (frog.x + this.width)) {
                             frog.hitching = true;
                             this.hitching = true;
-                            if(deltaTime > 4 && deltaTime < 9) {
-                            frog.x = frog.x + this.speedX / 144;
-                            }
-                            else {
-                                frog.x = frog.x + this.speedX / 60;
-                            }
+                            frog.x = frog.x + this.speedX * deltaTime / 1000; 
                         }
                     }
                     if(this.collision == false && this.hitching == true) {
@@ -369,12 +371,7 @@
                             (this.x + this.width - 10) < (frog.x + this.width)) {
                             frog.hitching = true;
                             this.hitching = true;
-                            if(deltaTime > 4 && deltaTime < 9) {
-                                frog.x = frog.x + this.speedX / 144;
-                            }
-                            else {
-                                frog.x = frog.x + this.speedX / 60;
-                            }
+                            frog.x = frog.x + this.speedX * deltaTime / 1000; 
                         }
                     }
                     if(this.collision == false && this.hitching == true) {
@@ -397,11 +394,7 @@
                             (this.x + this.width - 10) < (frog.x + this.width)) {
                             frog.hitching = true;
                             this.hitching = true;
-                            if(deltaTime > 4 && deltaTime < 9) {
-                                frog.x = frog.x + this.speedX / 144;
-                            } else {
-                                frog.x = frog.x + this.speedX / 60;
-                            }
+                            frog.x = frog.x + this.speedX * deltaTime / 1000; 
                         }
                     }
                     if(this.collision == false && this.hitching == true) {
@@ -437,14 +430,18 @@
                 draw() {
                     context.drawImage(froggerSheet, 1287 + this.frameCounter * 68 + 3  * this.frameCounter, 436, 46, 41,
                     this.x, this.y, this.width, this.height);
-
-                    if(deltaTime > 4 && deltaTime < 9) {
-                        this.x = this.x -81/144;    
+                    if(deltaTime > 4 && deltaTime < 7) {
+                        this.x = this.x + this.speedX / 144;    
                     }
                     if(deltaTime > 9) {
                         this.x = this.x + this.speedX / 60;
                     }
-
+                    if(deltaTime < 4){
+                        this.x = this.x + this.speedX / 240;
+                    }
+                    if(deltaTime > 7 && deltaTime < 9) {
+                        this.x = this.x + this.speedX / 120;
+                    }
                     if(this.x <-195){ 
                         this.x = canvas.width + this.width;
                     }
@@ -460,12 +457,7 @@
                                         (this.x + this.width) < (frog.x + frog.width + 19)){
                                         frog.hitching = true;
                                         this.hitching = true;
-                                    if(deltaTime > 4 && deltaTime < 9) {
-                                        frog.x = frog.x + this.speedX / 144;
-                                    }
-                                    if(deltaTime > 9) {
-                                        frog.x = frog.x + this.speedX / 60;
-                                    }
+                                        frog.x = frog.x + this.speedX * deltaTime / 1000; 
                                 }    
                             }
                             if(this.collision == false && this.hitching == true) {
@@ -501,11 +493,17 @@
                 draw() {
                     context.drawImage(froggerSheet, 1287 + this.frameCounter * 68 + 3  * this.frameCounter, 436, 46, 41,
                     this.x, this.y, this.width, this.height);
-                    if(deltaTime > 4 && deltaTime < 9) {
-                        this.x = this.x -81/144;    
+                    if(deltaTime > 4 && deltaTime < 7) {
+                        this.x = this.x + this.speedX / 144;    
                     }
                     if(deltaTime > 9) {
                         this.x = this.x + this.speedX / 60;
+                    }
+                    if(deltaTime < 4){
+                        this.x = this.x + this.speedX / 240;
+                    }
+                    if(deltaTime > 7 && deltaTime < 9) {
+                        this.x = this.x + this.speedX / 120;
                     }
                     if(this.x <-195){ 
                         this.x = canvas.width + 78;
@@ -521,12 +519,7 @@
                                         (this.x + this.width) < (frog.x + frog.width + 19)){
                                         frog.hitching = true;
                                         this.hitching = true;
-                                    if(deltaTime > 4 && deltaTime < 9) {
-                                        frog.x = frog.x + this.speedX / 144;
-                                    }
-                                    if(deltaTime > 9) {
-                                        frog.x = frog.x + this.speedX / 60;
-                                    }
+                                        frog.x = frog.x + this.speedX * deltaTime / 1000; 
                                 }    
                             }
                             if(this.collision == false && this.hitching == true) {
@@ -566,7 +559,6 @@
                         frog.x = 336;
                         frog.y = 655 - 48;
                         frog.movementDirection = "Up";
-
                         score();
                         goalCount++;
                         
@@ -759,28 +751,20 @@
                 if(frog.lifeCount == 2){
                     objectStorage.pop();
                     objectStorage.pop();
-                    lord_of_time.x = time_block.x - time_block.width;                   
+                    lord_of_time.x = time_block.x - time_block.width;
+                    frog.jumpCounter = 0;              
                 }
                 if(frog.lifeCount == 1){
                     objectStorage.pop();
                     objectStorage.pop();
                     lord_of_time.x = time_block.x - time_block.width;
+                    frog.jumpCounter = 0;
                 }
                 if(frog.lifeCount == 0){
                     objectStorage.pop();
                     objectStorage.pop();
                     lord_of_time.x = time_block.x - time_block.width;
-                }
-                if(frog.lifeCount < 0){
-                    objectStorage.pop();
-                    let life_1 = new Life(7, canvas.height - 45, 18, 18, 0, 0);
-                    let life_2 = new Life(7 + 22, canvas.height - 45, 18, 18, 0, 0);
-                    let life_3 = new Life(7 + 44, canvas.height - 45, 18, 18, 0, 0);
-                    objectStorage.push(life_1);
-                    objectStorage.push(life_2);
-                    objectStorage.push(life_3);
-                    frog.lifeCount = 3;
-                    roundScore = 0;   
+                    frog.jumpCounter = 0; 
                 }
                 objectStorage.push(frog);
             }
@@ -985,9 +969,7 @@
                 if(frog.lifeCount > 0){
                 for(let i = 0; i < objectStorage.length; i++) {
                     objectStorage[i].update(deltaTime);
-                    
                     objectStorage[i].draw();
-                       
                 }
                 for(let i = 0; i < goals.length; i++) {
                     goals[i].update(deltaTime);
@@ -1014,7 +996,6 @@
                         break;
                     case 38:
                         frog.moveUp();
-                        
                         break;
                     case 39:
                         frog.moveRight();
